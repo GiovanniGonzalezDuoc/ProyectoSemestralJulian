@@ -90,14 +90,14 @@ export class ServicebdService {
     FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario)
   );`;
 
-  tablaHorarios:string = `CREATE TABLE IF NOT EXISTS horarios (
+  tablaHorarios: string = `CREATE TABLE IF NOT EXISTS horarios (
     id_horario INTEGER PRIMARY KEY AUTOINCREMENT,
     id_cancha INTEGER NOT NULL,
     hora_inicio TEXT NOT NULL,
     hora_fin TEXT NOT NULL,
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
   );`;
-  
+
 
   //variables para los insert por defecto en nuestras tablas
   registroRoles: string = `INSERT OR IGNORE INTO roles (id_rol, nombre_rol) 
@@ -106,7 +106,7 @@ export class ServicebdService {
   VALUES (1, 'Admin', 1, 'admin@gmail.com', 'admin'), (2, 'Usuario', 2, 'usuario@gmail.com', 'usuario');`;
   registroCanchas: string = `INSERT OR IGNORE INTO canchas (id_cancha, tipo_deporte, nombre_cancha, estado_cancha) 
   VALUES (1, 'Futbolito', 'Cancha 1', 'Disponible'), (2, 'Pádel', 'Cancha 2', 'Ocupado');`;
-  registroHorarios: string = `INSERT INTO horarios (id_cancha, hora_inicio, hora_fin) VALUES
+  registroHorarios: string = `INSERT OR IGNORE INTO horarios (id_cancha, hora_inicio, hora_fin) VALUES
   (1, '18:00', '19:00'),
   (1, '19:00', '20:00'),
   (2, '18:00', '19:00'),
@@ -174,6 +174,14 @@ export class ServicebdService {
   async crearTablas() {
     try {
       //Carga Las Listas
+      this.listarCanchas()
+      this.listarHistorialReservas()
+      this.listarHorarios()
+      this.listarInscripciones()
+      this.listarReservas()
+      this.listarRoles()
+      this.listarTorneos()
+      this.listarUsuarios()
 
       //ejecuto la creación de Tablas
       await this.database.executeSql(this.tablaRoles, []);
@@ -183,11 +191,13 @@ export class ServicebdService {
       await this.database.executeSql(this.tablaTorneos, []);
       await this.database.executeSql(this.tablaInscripcionesTorneo, []);
       await this.database.executeSql(this.tablaHistorialReservas, []);
+      await this.database.executeSql(this.tablaHorarios, []);
 
       //ejecuto los insert por defecto en el caso que existan
       await this.database.executeSql(this.registroRoles, []);
       await this.database.executeSql(this.registroUsuarios, []);
       await this.database.executeSql(this.registroCanchas, []);
+      await this.database.executeSql(this.registroHorarios, []);
 
       //modifica el estado de la Base De Datos
       await this.isDBReady.next(true);
@@ -231,25 +241,27 @@ export class ServicebdService {
       return canchas;
     });
   }
-  obtenerHorariosDisponibles(canchaId: number, fecha: string): Promise<any[]> {
+  obtenerHorariosDisponibles(canchaId: number): Promise<any[]> {
     const query = `
-      SELECT h.id_horario, h.hora_inicio, h.hora_fin
-      FROM horarios h
-      LEFT JOIN reservas r ON h.id_horario = r.id_horario AND r.fecha_reserva = ?
-      WHERE h.id_cancha = ? AND r.id_horario IS NULL
+      SELECT id_horario, hora_inicio, hora_fin
+      FROM horarios
+      WHERE id_cancha = ?
     `;
-    return this.database.executeSql(query, [fecha, canchaId]).then((res) => {
-      const horariosDisponibles: any[] = [];
-      for (let i = 0; i < res.rows.length; i++) {
-        horariosDisponibles.push({
-          id_horario: res.rows.item(i).id_horario,
-          hora_inicio: res.rows.item(i).hora_inicio,
-          hora_fin: res.rows.item(i).hora_fin,
-        });
+
+    return this.database.executeSql(query, [canchaId]).then(res => {
+      let horarios: any[] = [];
+      if (res.rows.length > 0) {
+        for (let i = 0; i < res.rows.length; i++) {
+          horarios.push(res.rows.item(i));
+        }
       }
-      return horariosDisponibles;
+      return horarios;
+    }).catch((error) => {
+      console.error('Error en la consulta SQL:', error);
+      return [];
     });
   }
+
   eliminarCancha(id: number) {
     return this.database.executeSql('DELETE FROM canchas WHERE id_cancha = ?', [id]).then(res => {
       this.presentToast('bottom', "Cancha Eliminado");
@@ -344,18 +356,14 @@ export class ServicebdService {
       this.listadoUsuarios.next(items as any);
     });
   }
-
   // Validar login del usuario
-  validarUsuario(email: string, contrasena: string): Promise<Usuario | null> {
-    console.log('Email:', email); // Imprime el correo
-    console.log('Contraseña:', contrasena); // Imprime la contraseña
-
+  validarUsuario(email: string, contrasena: string){
     return this.database.executeSql(`
-      SELECT * FROM usuarios WHERE email = ? AND contrasena = ?`, [email, contrasena])
+    SELECT * FROM usuarios WHERE email = ? AND contrasena = ?`, [email, contrasena])
       .then(res => {
         if (res.rows.length > 0) {
           const usuario: Usuario = {
-            id_usuario: res.rows.item(0).id_usuario,
+            id_usuario: res.rows.item(0).id_usuario, // Este es un número
             nombre: res.rows.item(0).nombre,
             id_rol: res.rows.item(0).id_rol,
             email: res.rows.item(0).email,
@@ -363,12 +371,11 @@ export class ServicebdService {
           };
           return usuario; // Retorna el usuario si es encontrado
         } else {
-          console.log('Usuario no encontrado'); // Indica que no se encontró el usuario
           return null; // Usuario no encontrado
         }
       })
       .catch(e => {
-        console.error('Error al validar el usuario: ', e);
+        console.error('Error al validar usuario:', e);
         return null;
       });
   }
@@ -429,6 +436,40 @@ export class ServicebdService {
         }
       }
       this.listadoReservas.next(items as any);
+    });
+  }
+  obtenerHorariosOcupados(canchaId: number, fecha: string): Promise<any[]> {
+    const query = `
+      SELECT id_horario
+      FROM reservas
+      WHERE id_cancha = ? AND fecha_reserva LIKE ?
+    `;
+  
+    return this.database.executeSql(query, [canchaId, `${fecha}%`]).then(res => {
+      let ocupados: any[] = [];
+      if (res.rows.length > 0) {
+        for (let i = 0; i < res.rows.length; i++) {
+          ocupados.push(res.rows.item(i).id_horario);
+        }
+      }
+      return ocupados;
+    });
+  }
+  obtenerReservasPorFecha(idCancha: number, fecha: string): Promise<any[]> {
+    const query = `
+      SELECT horario
+      FROM reservas
+      WHERE id_cancha = ? AND DATE(fecha_reserva) = ?
+    `;
+    
+    return this.database.executeSql(query, [idCancha, fecha]).then(res => {
+      let reservas: any[] = [];
+      if (res.rows.length > 0) {
+        for (let i = 0; i < res.rows.length; i++) {
+          reservas.push(res.rows.item(i));
+        }
+      }
+      return reservas;
     });
   }
 

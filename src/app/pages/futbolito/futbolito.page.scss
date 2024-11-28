@@ -1,6 +1,6 @@
 ion-content{
     --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)),
-      url("/assets/futbolito.jpg") no-repeat center center / cover;
+      url("/assets/icon/futbolito.jpg") no-repeat center center / cover;
 
 }
 
@@ -12,7 +12,7 @@ ion-content{
 }
 
 .transparent-background {
-  background: url('/assets/futbolito.jpg') no-repeat center center; /* Ruta de tu imagen */
+  background: url('/assets/icon/futbolito.jpg') no-repeat center center; /* Ruta de tu imagen */
   background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
   position: relative;
 }
@@ -21,6 +21,16 @@ ion-content{
   
   padding: 16px; /* Ajusta el padding según sea necesario */
   border-radius: 8px; /* Opcional: para bordes redondeados */
+}
+/* Estilo para los horarios ocupados */
+.horario-ocupado {
+  color: #b0b0b0;  /* Color gris para los horarios ocupados */
+  opacity: 0.6;    /* Opacidad para que se vea como deshabilitado */
+}
+
+/* Estilo para los checkboxes deshabilitados */
+ion-checkbox[disabled] {
+  pointer-events: none;  /* Evita que se pueda interactuar con el checkbox */
 }
 
 

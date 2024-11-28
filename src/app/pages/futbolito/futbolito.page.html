@@ -6,6 +6,7 @@
 
 <ion-content padding>
   <form (ngSubmit)="confirmarReserva()">
+    <!-- Selección de cancha -->
     <ion-item>
       <ion-label>Canchas Disponibles</ion-label>
       <ion-select [(ngModel)]="selectedCancha" name="cancha" (ionChange)="cargarHorarios()" required>
@@ -15,12 +16,27 @@
       </ion-select>
     </ion-item>
 
+    <!-- Selección de fecha -->
     <ion-item>
       <ion-label>Fecha</ion-label>
-      <ion-datetime [(ngModel)]="selectedDate" name="fecha" [min]="minDate" (ionChange)="cargarHorarios()" required>
-      </ion-datetime>
+      <ion-select [(ngModel)]="selectedDay" name="day" (ionChange)="cargarHorarios()" required>
+        <ion-select-option *ngFor="let day of days" [value]="day">{{ day }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Mes</ion-label>
+      <ion-select [(ngModel)]="selectedMonth" name="month" (ionChange)="cargarHorarios()" required>
+        <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Año</ion-label>
+      <ion-select [(ngModel)]="selectedYear" name="year" (ionChange)="cargarHorarios()" required>
+        <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+      </ion-select>
     </ion-item>
 
+    <!-- Selección de horario -->
     <ion-item>
       <ion-label>Horarios Disponibles</ion-label>
       <ion-select [(ngModel)]="selectedHorario" name="horario" required>
@@ -30,9 +46,11 @@
       </ion-select>
     </ion-item>
 
+
+    <!-- Correo -->
     <ion-item>
       <ion-label>Correo Electrónico</ion-label>
-      <ion-input [(ngModel)]="correo" name="correo" type="email" required></ion-input>
+      <ion-input [(ngModel)]="correo" name="correo" type="email" readonly required></ion-input>
     </ion-item>
 
     <ion-button expand="full" type="submit">Confirmar Reserva</ion-button>
