@@ -15,7 +15,7 @@ export class LoginPage {
   constructor(
     private router: Router,
     private bd: ServicebdService
-  ) {}
+  ) { }
 
 
   // Método de inicio de sesión
@@ -26,12 +26,7 @@ export class LoginPage {
         if (usuario) {
           localStorage.setItem('id_usuario', usuario.id_usuario.toString());
           localStorage.setItem('id_rol', usuario.id_rol.toString());
-
-          if (usuario.id_rol === 1) {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/home']);
-          }
+          this.router.navigate(['/home']);
         } else {
           this.bd.presentAlert('Inicio Fallido', 'Correo o contraseña incorrectos.');
         }

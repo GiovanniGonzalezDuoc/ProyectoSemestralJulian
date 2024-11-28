@@ -9,6 +9,7 @@ import { Rol } from '../models/rol';
 import { Torneo } from '../models/torneo';
 import { Usuario } from '../models/usuario';
 import { Historialreserva } from '../models/historialreserva';
+import { Horario } from '../models/horario';
 
 
 
@@ -89,6 +90,15 @@ export class ServicebdService {
     FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario)
   );`;
 
+  tablaHorarios:string = `CREATE TABLE IF NOT EXISTS horarios (
+    id_horario INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_cancha INTEGER NOT NULL,
+    hora_inicio TEXT NOT NULL,
+    hora_fin TEXT NOT NULL,
+    FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
+  );`;
+  
+
   //variables para los insert por defecto en nuestras tablas
   registroRoles: string = `INSERT OR IGNORE INTO roles (id_rol, nombre_rol) 
   VALUES (1, 'Admin'), (2, 'Usuario');`;
@@ -96,6 +106,11 @@ export class ServicebdService {
   VALUES (1, 'Admin', 1, 'admin@gmail.com', 'admin'), (2, 'Usuario', 2, 'usuario@gmail.com', 'usuario');`;
   registroCanchas: string = `INSERT OR IGNORE INTO canchas (id_cancha, tipo_deporte, nombre_cancha, estado_cancha) 
   VALUES (1, 'Futbolito', 'Cancha 1', 'Disponible'), (2, 'Pádel', 'Cancha 2', 'Ocupado');`;
+  registroHorarios: string = `INSERT INTO horarios (id_cancha, hora_inicio, hora_fin) VALUES
+  (1, '18:00', '19:00'),
+  (1, '19:00', '20:00'),
+  (2, '18:00', '19:00'),
+  (2, '19:00', '20:00');`;
 
 
   //variables para guardar los datos de las consultas en las tablas
@@ -106,6 +121,7 @@ export class ServicebdService {
   listadoTorneos = new BehaviorSubject([]);
   listadoInscripciones = new BehaviorSubject([]);
   listadoHistorialReservas = new BehaviorSubject([]);
+  listadoHorario = new BehaviorSubject([]);
 
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -180,7 +196,7 @@ export class ServicebdService {
       this.presentAlert('Creacion De Tablas', 'Error en crear la Tablas: ' + JSON.stringify(e));
     }
   }
-  
+
   //metodos para manipular los observables
   //Apartado Canchas
   fetchCanchasl(): Observable<Cancha[]> {
@@ -205,18 +221,46 @@ export class ServicebdService {
       this.listadoCanchas.next(items as any);
     })
   }
-
+  obtenerCanchas(): Promise<any[]> {
+    const query = 'SELECT * FROM canchas';
+    return this.database.executeSql(query, []).then((res) => {
+      let canchas = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        canchas.push(res.rows.item(i));
+      }
+      return canchas;
+    });
+  }
+  obtenerHorariosDisponibles(canchaId: number, fecha: string): Promise<any[]> {
+    const query = `
+      SELECT h.id_horario, h.hora_inicio, h.hora_fin
+      FROM horarios h
+      LEFT JOIN reservas r ON h.id_horario = r.id_horario AND r.fecha_reserva = ?
+      WHERE h.id_cancha = ? AND r.id_horario IS NULL
+    `;
+    return this.database.executeSql(query, [fecha, canchaId]).then((res) => {
+      const horariosDisponibles: any[] = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        horariosDisponibles.push({
+          id_horario: res.rows.item(i).id_horario,
+          hora_inicio: res.rows.item(i).hora_inicio,
+          hora_fin: res.rows.item(i).hora_fin,
+        });
+      }
+      return horariosDisponibles;
+    });
+  }
   eliminarCancha(id: number) {
     return this.database.executeSql('DELETE FROM canchas WHERE id_cancha = ?', [id]).then(res => {
-      this.presentToast('bottom',"Cancha Eliminado");
+      this.presentToast('bottom', "Cancha Eliminado");
       this.listarCanchas();
     }).catch(e => {
-      this.presentAlert('Eliminar Cancha','Error Eliminando Cancha:' + JSON.stringify(e));
+      this.presentAlert('Eliminar Cancha', 'Error Eliminando Cancha:' + JSON.stringify(e));
     })
   }
 
-  modificarCancha(id: number, tipo_deporte: string,nombre_cancha:string,estado_cancha:string) {
-    return this.database.executeSql('UPDATE canchas SET tipo_deporte = ?, nombre_cancha = ?, estado_cancha = ?  WHERE id_rol = ?', [tipo_deporte,nombre_cancha,estado_cancha, id]).then(res => {
+  modificarCancha(id: number, tipo_deporte: string, nombre_cancha: string, estado_cancha: string) {
+    return this.database.executeSql('UPDATE canchas SET tipo_deporte = ?, nombre_cancha = ?, estado_cancha = ?  WHERE id_rol = ?', [tipo_deporte, nombre_cancha, estado_cancha, id]).then(res => {
       this.presentToast('bottom', "Cancha Modificado");
       this.listarCanchas();
     }).catch(e => {
@@ -224,19 +268,19 @@ export class ServicebdService {
     })
   }
 
-  insertarCancha(tipo_deporte: string,nombre_cancha:string,estado_cancha:string) {
-    return this.database.executeSql('INSERT INTO canchas(tipo_deporte,nombre_cancha,estado_cancha) VALUES (?)', [tipo_deporte,nombre_cancha,estado_cancha]).then(res => {
-      this.presentToast('bottom',"Cancha Insertado");
+  insertarCancha(tipo_deporte: string, nombre_cancha: string, estado_cancha: string) {
+    return this.database.executeSql('INSERT INTO canchas(tipo_deporte,nombre_cancha,estado_cancha) VALUES (?)', [tipo_deporte, nombre_cancha, estado_cancha]).then(res => {
+      this.presentToast('bottom', "Cancha Insertado");
       this.listarCanchas();
     }).catch(e => {
-      this.presentAlert('Insertar','Error Insertando Cancha:' + JSON.stringify(e));
+      this.presentAlert('Insertar', 'Error Insertando Cancha:' + JSON.stringify(e));
     })
   }
   //Apartado Roles
   fetchRoles(): Observable<Rol[]> {
     return this.listadoRoles.asObservable();
   }
-  
+
   listarRoles() {
     return this.database.executeSql('SELECT * FROM roles', []).then(res => {
       let items: Rol[] = [];
@@ -251,7 +295,7 @@ export class ServicebdService {
       this.listadoRoles.next(items as any);
     });
   }
-  
+
   eliminarRol(id: number) {
     return this.database.executeSql('DELETE FROM roles WHERE id_rol = ?', [id]).then(res => {
       this.presentToast('bottom', "Rol Eliminado");
@@ -260,7 +304,7 @@ export class ServicebdService {
       this.presentAlert('Eliminar Rol', 'Error Eliminando Rol:' + JSON.stringify(e));
     });
   }
-  
+
   modificarRol(id: number, nombre_rol: string) {
     return this.database.executeSql('UPDATE roles SET nombre_rol = ? WHERE id_rol = ?', [nombre_rol, id]).then(res => {
       this.presentToast('bottom', "Rol Modificado");
@@ -269,7 +313,7 @@ export class ServicebdService {
       this.presentAlert('Modificar', 'Error Modificando Rol:' + JSON.stringify(e));
     });
   }
-  
+
   insertarRol(nombre_rol: string) {
     return this.database.executeSql('INSERT INTO roles(nombre_rol) VALUES (?)', [nombre_rol]).then(res => {
       this.presentToast('bottom', "Rol Insertado");
@@ -282,7 +326,7 @@ export class ServicebdService {
   fetchUsuarios(): Observable<Usuario[]> {
     return this.listadoUsuarios.asObservable();
   }
-  
+
   listarUsuarios() {
     return this.database.executeSql('SELECT * FROM usuarios', []).then(res => {
       let items: Usuario[] = [];
@@ -300,7 +344,7 @@ export class ServicebdService {
       this.listadoUsuarios.next(items as any);
     });
   }
-  
+
   // Validar login del usuario
   validarUsuario(email: string, contrasena: string): Promise<Usuario | null> {
     console.log('Email:', email); // Imprime el correo
@@ -327,8 +371,16 @@ export class ServicebdService {
         console.error('Error al validar el usuario: ', e);
         return null;
       });
-}
-  
+  }
+  // Verificar si el correo ya está registrado
+  verificarUsuario(email: string): Promise<boolean> {
+    return this.database.executeSql(`
+      SELECT * FROM usuarios WHERE email = ?`, [email])
+      .then(result => {
+        return result.rows.length > 0; // Retorna true si ya existe un usuario con ese correo
+      });
+  }
+
   eliminarUsuario(id: number) {
     return this.database.executeSql('DELETE FROM usuarios WHERE id_usuario = ?', [id]).then(res => {
       this.presentToast('bottom', "Usuario Eliminado");
@@ -337,7 +389,7 @@ export class ServicebdService {
       this.presentAlert('Eliminar Usuario', 'Error Eliminando Usuario:' + JSON.stringify(e));
     });
   }
-  
+
   modificarUsuario(id: number, nombre: string, id_rol: number, email: string, contrasena: string) {
     return this.database.executeSql('UPDATE usuarios SET nombre = ?, id_rol = ?, email = ?, contrasena = ? WHERE id_usuario = ?', [nombre, id_rol, email, contrasena, id]).then(res => {
       this.presentToast('bottom', "Usuario Modificado");
@@ -346,7 +398,7 @@ export class ServicebdService {
       this.presentAlert('Modificar', 'Error Modificando Usuario:' + JSON.stringify(e));
     });
   }
-  
+
   insertarUsuario(nombre: string, id_rol: number, email: string, contrasena: string) {
     return this.database.executeSql('INSERT INTO usuarios(nombre, id_rol, email, contrasena) VALUES (?, ?, ?, ?)', [nombre, id_rol, email, contrasena]).then(res => {
       this.presentToast('bottom', "Usuario Insertado");
@@ -359,7 +411,7 @@ export class ServicebdService {
   fetchReservas(): Observable<Reserva[]> {
     return this.listadoReservas.asObservable();
   }
-  
+
   listarReservas() {
     return this.database.executeSql('SELECT * FROM reservas', []).then(res => {
       let items: Reserva[] = [];
@@ -379,7 +431,7 @@ export class ServicebdService {
       this.listadoReservas.next(items as any);
     });
   }
-  
+
   eliminarReserva(id: number) {
     return this.database.executeSql('DELETE FROM reservas WHERE id_reserva = ?', [id]).then(res => {
       this.presentToast('bottom', "Reserva Eliminada");
@@ -388,7 +440,7 @@ export class ServicebdService {
       this.presentAlert('Eliminar Reserva', 'Error Eliminando Reserva:' + JSON.stringify(e));
     });
   }
-  
+
   modificarReserva(id: number, id_usuario: number, id_cancha: number, horario: string, estado_reserva: string, correo: string) {
     return this.database.executeSql('UPDATE reservas SET id_usuario = ?, id_cancha = ?, horario = ?, estado_reserva = ?, correo = ? WHERE id_reserva = ?', [id_usuario, id_cancha, horario, estado_reserva, correo, id]).then(res => {
       this.presentToast('bottom', "Reserva Modificada");
@@ -397,7 +449,7 @@ export class ServicebdService {
       this.presentAlert('Modificar', 'Error Modificando Reserva:' + JSON.stringify(e));
     });
   }
-  
+
   insertarReserva(id_usuario: number, id_cancha: number, horario: string, estado_reserva: string, correo: string) {
     return this.database.executeSql('INSERT INTO reservas(id_usuario, id_cancha, horario, estado_reserva, correo) VALUES (?, ?, ?, ?, ?)', [id_usuario, id_cancha, horario, estado_reserva, correo]).then(res => {
       this.presentToast('bottom', "Reserva Insertada");
@@ -410,7 +462,7 @@ export class ServicebdService {
   fetchHistorialReservas(): Observable<Historialreserva[]> {
     return this.listadoHistorialReservas.asObservable();
   }
-  
+
   listarHistorialReservas() {
     return this.database.executeSql('SELECT * FROM historial_reservas', []).then(res => {
       let items: Historialreserva[] = [];
@@ -430,7 +482,7 @@ export class ServicebdService {
       this.listadoHistorialReservas.next(items as any);
     });
   }
-  
+
   eliminarHistorialReserva(id: number) {
     return this.database.executeSql('DELETE FROM historial_reservas WHERE id_historial = ?', [id]).then(res => {
       this.presentToast('bottom', "Historial Reserva Eliminada");
@@ -439,7 +491,7 @@ export class ServicebdService {
       this.presentAlert('Eliminar Historial', 'Error Eliminando Historial Reserva:' + JSON.stringify(e));
     });
   }
-  
+
   insertarHistorialReserva(id_reserva: number, id_usuario: number, id_cancha: number, estado_reserva: string, nombre_cancha: string) {
     return this.database.executeSql('INSERT INTO historial_reservas(id_reserva, id_usuario, id_cancha, estado_reserva, nombre_cancha) VALUES (?, ?, ?, ?, ?)', [id_reserva, id_usuario, id_cancha, estado_reserva, nombre_cancha]).then(res => {
       this.presentToast('bottom', "Historial Reserva Insertada");
@@ -452,7 +504,7 @@ export class ServicebdService {
   fetchTorneos(): Observable<Torneo[]> {
     return this.listadoTorneos.asObservable();
   }
-  
+
   listarTorneos() {
     return this.database.executeSql('SELECT * FROM torneos', []).then(res => {
       let items: Torneo[] = [];
@@ -472,7 +524,7 @@ export class ServicebdService {
       this.listadoTorneos.next(items as any);
     });
   }
-  
+
   eliminarTorneo(id: number) {
     return this.database.executeSql('DELETE FROM torneos WHERE id_torneo = ?', [id]).then(res => {
       this.presentToast('bottom', "Torneo Eliminado");
@@ -481,7 +533,7 @@ export class ServicebdService {
       this.presentAlert('Eliminar Torneo', 'Error Eliminando Torneo:' + JSON.stringify(e));
     });
   }
-  
+
   modificarTorneo(id: number, nombre_torneo: string, descripcion: string, fecha_inicio: string, fecha_fin: string, tipo_deporte: string, estado_torneo: string) {
     return this.database.executeSql('UPDATE torneos SET nombre_torneo = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, tipo_deporte = ?, estado_torneo = ? WHERE id_torneo = ?', [nombre_torneo, descripcion, fecha_inicio, fecha_fin, tipo_deporte, estado_torneo, id]).then(res => {
       this.presentToast('bottom', "Torneo Modificado");
@@ -490,7 +542,7 @@ export class ServicebdService {
       this.presentAlert('Modificar', 'Error Modificando Torneo:' + JSON.stringify(e));
     });
   }
-  
+
   insertarTorneo(nombre_torneo: string, descripcion: string, fecha_inicio: string, fecha_fin: string, tipo_deporte: string, estado_torneo: string) {
     return this.database.executeSql('INSERT INTO torneos(nombre_torneo, descripcion, fecha_inicio, fecha_fin, tipo_deporte, estado_torneo) VALUES (?, ?, ?, ?, ?, ?)', [nombre_torneo, descripcion, fecha_inicio, fecha_fin, tipo_deporte, estado_torneo]).then(res => {
       this.presentToast('bottom', "Torneo Insertado");
@@ -503,7 +555,7 @@ export class ServicebdService {
   fetchInscripciones(): Observable<Inscripcion[]> {
     return this.listadoInscripciones.asObservable();
   }
-  
+
   listarInscripciones() {
     return this.database.executeSql('SELECT * FROM inscripciones_torneo', []).then(res => {
       let items: Inscripcion[] = [];
@@ -520,7 +572,7 @@ export class ServicebdService {
       this.listadoInscripciones.next(items as any);
     });
   }
-  
+
   eliminarInscripcion(id: number) {
     return this.database.executeSql('DELETE FROM inscripciones_torneo WHERE id_inscripcion = ?', [id]).then(res => {
       this.presentToast('bottom', "Inscripción Eliminada");
@@ -529,7 +581,7 @@ export class ServicebdService {
       this.presentAlert('Eliminar Inscripción', 'Error Eliminando Inscripción:' + JSON.stringify(e));
     });
   }
-  
+
   insertarInscripcion(id_torneo: number, id_usuario: number, fecha_inscripcion: string) {
     return this.database.executeSql('INSERT INTO inscripciones_torneo(id_torneo, id_usuario, fecha_inscripcion) VALUES (?, ?, ?)', [id_torneo, id_usuario, fecha_inscripcion]).then(res => {
       this.presentToast('bottom', "Inscripción Insertada");
@@ -538,5 +590,51 @@ export class ServicebdService {
       this.presentAlert('Insertar', 'Error Insertando Inscripción:' + JSON.stringify(e));
     });
   }
-   
+  //APARTADO HORARIO
+  fetchHorarios(): Observable<Horario[]> {
+    return this.listadoHorario.asObservable();
+  }
+
+  // Método para listar los horarios de todas las canchas
+  listarHorarios() {
+    return this.database.executeSql('SELECT * FROM horarios', []).then(res => {
+      let items: Horario[] = [];
+      if (res.rows.length > 0) {
+        for (let i = 0; i < res.rows.length; i++) {
+          items.push({
+            id_horario: res.rows.item(i).id_horario,
+            id_cancha: res.rows.item(i).id_cancha,
+            hora_inicio: res.rows.item(i).hora_inicio,
+            hora_fin: res.rows.item(i).hora_fin,
+          });
+        }
+      }
+      this.listadoHorario.next(items as any);
+    }).catch(e => {
+      console.error("Error listando horarios:", e);
+    });
+  }
+  eliminarHorario(id: number) {
+    return this.database.executeSql('DELETE FROM horarios WHERE id_horario = ?', [id]).then(res => {
+      this.presentToast('bottom', "Horario Eliminado");
+      this.listarHorarios();  // Actualiza la lista después de eliminar el horario
+    }).catch(e => {
+      this.presentAlert('Eliminar Horario', 'Error Eliminando Horario:' + JSON.stringify(e));
+    });
+  }
+
+  // Método para actualizar un horario (modificar)
+  modificarHorario(id: number, idCancha: number, horaInicio: string, horaFin: string) {
+    return this.database.executeSql('UPDATE horarios SET id_cancha = ?, hora_inicio = ?, hora_fin = ? WHERE id_horario = ?', [idCancha, horaInicio, horaFin, id]).then(res => {
+      this.presentToast('bottom', 'Horario Modificado');
+      this.listarHorarios();  // Actualiza la lista después de modificar el horario
+    }).catch(e => {
+      this.presentAlert('Modificar Horario', 'Error Modificando Horario:' + JSON.stringify(e));
+    });
+  }
+  insertarHorario(idCancha: number, horaInicio: string, horaFin: string): Promise<void> {
+    const query = `INSERT INTO horarios (id_cancha, hora_inicio, hora_fin) VALUES (?, ?, ?)`;
+    return this.database.executeSql(query, [idCancha, horaInicio, horaFin]);
+  }
+
 }

@@ -1,0 +1,82 @@
+ion-content {
+    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)), url("/assets/loginfutbolpadel.jpg") no-repeat center center / cover;
+}
+
+.keyboard-is-open {
+    padding-bottom: 300px;
+    /* Ajuste para dejar espacio para el teclado */
+}
+
+.login-section {
+    height: 85vh;
+    /* Reduce un poco la altura para acomodar el teclado */
+    max-height: 85vh;
+    overflow-y: auto;
+    /* Permite desplazamiento si el contenido excede el área visible */
+    padding-bottom: 20px;
+    /* Espacio adicional en la parte inferior */
+    background: #ffffff;
+    width: 100%;
+    max-width: 500px;
+    position: fixed;
+    bottom: 0;
+    border-top-left-radius: 46px;
+    border-top-right-radius: 46px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra sutil */
+}
+
+.heading h1 {
+    color: rgba(0, 0, 0, 0.979);
+    font-size: 1.7rem;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.login-form .form-input {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.form-input ion-icon {
+    position: absolute;
+    top: 30px;
+    left: 5px;
+    font-size: 1.5rem;
+    color: #004aad;
+    z-index: 2;
+}
+
+.form-input ion-item {
+    --padding-start: 30px;
+    /* Acomoda el padding para que no se superponga el icono */
+}
+
+.form-input ion-input {
+    font-size: 1.2rem;
+    color: #000000;
+    --padding-start: 35px;
+    /* Para evitar que el texto se sobreponga al icono */
+}
+
+.action-button {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Espacio entre los botones */
+    margin-top: 20px;
+}
+
+.login-button {
+    --background: #cae62f;
+    /* Color deportivo */
+    width: 100%;
+    font-weight: bold;
+}
+
+.signup-button {
+    --border-color: #4adc30;
+    color: #080808;
+    font-weight: bold;
+    width: 100%;
+}

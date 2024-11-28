@@ -1,13 +1,40 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>futbolito</ion-title>
+    <ion-title>Reservar Cancha de Fútbol</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">futbolito</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <form (ngSubmit)="confirmarReserva()">
+    <ion-item>
+      <ion-label>Canchas Disponibles</ion-label>
+      <ion-select [(ngModel)]="selectedCancha" name="cancha" (ionChange)="cargarHorarios()" required>
+        <ion-select-option *ngFor="let cancha of canchasDisponibles" [value]="cancha.id_cancha">
+          {{ cancha.nombre_cancha }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Fecha</ion-label>
+      <ion-datetime [(ngModel)]="selectedDate" name="fecha" [min]="minDate" (ionChange)="cargarHorarios()" required>
+      </ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Horarios Disponibles</ion-label>
+      <ion-select [(ngModel)]="selectedHorario" name="horario" required>
+        <ion-select-option *ngFor="let horario of horariosDisponibles" [value]="horario.id_horario">
+          {{ horario.hora_inicio }} - {{ horario.hora_fin }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Correo Electrónico</ion-label>
+      <ion-input [(ngModel)]="correo" name="correo" type="email" required></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit">Confirmar Reserva</ion-button>
+  </form>
 </ion-content>
