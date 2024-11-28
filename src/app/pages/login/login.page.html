@@ -1,32 +1,48 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title class="ion-text-center">Iniciar Sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <div class="centrar-card">
-    <div class="ion-padding">
-      <ion-card>
-        <ion-card-content>
-            <span class="texto-label">Email</span>
-            <div class="bordes-texto">
-              <ion-input class="input" [(ngModel)]="emailsolicitado" name="email" placeholder="Ingrese su Correo" required></ion-input>
-            </div>
-
-            <span class="texto-label">Contraseña</span>
-            <div class="bordes-texto">
-              <ion-input class="input" [(ngModel)]="contrasenasolicitada" name="contrasena" placeholder="Ingrese su Contraseña" type="password" required></ion-input>
-            </div>
-
-          <div class="container-boton">
-            <ion-button class="boton-form" (click)="login()">Iniciar Sesión</ion-button>
-            <ion-button class="boton-form" [routerLink]="['/registro']">Registrarse</ion-button>
-          </div>
-          </ion-card-content>
-      </ion-card>
+<ion-content>
+  <div class="login-section ion-padding">
+    <div class="heading ion-padding">
+      <h1>¡Bienvenido Deportista!</h1>
+      <p>Inicie sesión para saber dónde jugar!</p>
     </div>
-  </div>
-  <p class="ion-text-center">Olvidaste tu contraseña?</p><p class="ion-text-center" style="color: blue;" [routerLink]="['/verificacion-email']">Pincha aqui </p>
-</ion-content>
 
+    <form (ngSubmit)="onLogin()">
+      <div class="login-form ion-padding">
+        <div class="form-input">
+          <ion-icon name="mail-outline"></ion-icon>
+          <ion-item>
+            <ion-input
+              label="Correo"
+              labelPlacement="floating"
+              placeholder="Ingrese su correo"
+              [(ngModel)]="correo"
+              name="correo"
+              required>
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="form-input">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <ion-item>
+            <ion-input
+              label="Contraseña"
+              labelPlacement="floating"
+              placeholder="Ingrese su contraseña"
+              type="password"
+              [(ngModel)]="contrasena"
+              name="contraseña"
+              required>
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button class="signup-button2" size="small" fill="outline" routerLink="/recupcontra">Olvidé mi contraseña</ion-button>
+      </div>
+
+      <div class="action-button ion-padding">
+        <ion-button size="large" class="login-button" type="submit">Iniciar sesión</ion-button>
+        <ion-button class="signup-button1" size="large" fill="outline" routerLink="/registro">Quiero registrarme</ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

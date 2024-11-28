@@ -1,65 +1,70 @@
-<ion-header [translucent]="true">
-  <ng-container *ngIf="rol_id_rol === 2; else NormalHeader">
-    <app-header-admin></app-header-admin>
-  </ng-container>
-  <ng-template #NormalHeader>
-    <app-header></app-header>
-  </ng-template>
+<ion-menu contentId="main-content">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>Menu</ion-title>
+        </ion-toolbar>
+        <ion-buttons>
+            <ion-icon name="list-sharp"></ion-icon>
+            <ion-button [routerLink]="['/historial']">Historial de reservas</ion-button>
+        </ion-buttons>
+        <ion-buttons>
+            <ion-icon name="construct-sharp"></ion-icon>
+            <ion-button [routerLink]="['/nosotros']">Nosotros</ion-button>
+        </ion-buttons>
+        <ion-buttons>
+            <ion-icon name="trophy-sharp"></ion-icon>
+            <ion-button [routerLink]="['/torneos']">Torneos</ion-button>
+        </ion-buttons>
+
+    </ion-header>
+    <ion-footer>
+        <ion-buttons>
+            <ion-icon name="person-sharp"></ion-icon>
+            <ion-button [routerLink]="['/perfil']">Mi perfil</ion-button>
+        </ion-buttons>
+
+        <ion-buttons>
+            <ion-icon name="log-out-sharp"></ion-icon>
+            <ion-button [routerLink]="['/login']">Cerrar sesion</ion-button>
+        </ion-buttons>
+
+    </ion-footer>
+
+
+</ion-menu>
+<div class="ion-page" id="main-content">
+    <ion-header>
+        <ion-toolbar>
+            <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding"></ion-content>
+</div>
+<ion-header>
+    <ion-toolbar>
+        <ion-title slot="end">Conexión Deportiva</ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
-<ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-button (click)="navigateToHome()">Home</ion-button>
-  </ion-buttons>
-  <ion-buttons slot="end">
-    <ion-button (click)="navigateToNoticias()">Noticias</ion-button>
-  </ion-buttons>
-</ion-toolbar>
-
-<ion-content [fullscreen]="true">
-  <ion-card *ngFor="let x of arregloPublicacion">
-    <ion-card-header (click)="descripcion(x)">
-      <ion-item lines="none">
-        <div class="avatar-container">
-          <ion-avatar slot="start">
-            <img [src]="fotoPredeterminada" alt="Perfil">
-          </ion-avatar>
-        </div>
-        <div class="info-container">
-          <ion-label>
-            <h2>{{ x.nombre_usuario_publicacion }}</h2>
-            <p>hace {{ x.fecha_publicacion }} horas</p>
-            <p>{{ categorias[x.categoria_publicacion_id_categoria] }}</p>
-          </ion-label>
-        </div>
-      </ion-item>
+<ion-card>
+    <ion-card-header>
+        <ion-card-title>PADEL</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
-      <h1>{{ x.titulo_publicacion }}</h1>
+        <ion-button [routerLink]="['/padel']" expand="full">Ver horarios</ion-button>
     </ion-card-content>
+</ion-card>
 
+<ion-card>
+    <ion-card-header>
+        <ion-card-title>FUTBOLITO</ion-card-title>
+    </ion-card-header>
     <ion-card-content>
-      <p>
-        <!-- Usamos un enfoque simplificado para mostrar la descripción -->
-        {{ x.descripcion_publicacion || 'Sin descripción disponible.' }}
-      </p>
+        <ion-button [routerLink]="['/futbolito']" expand="full">Ver horarios</ion-button>
     </ion-card-content>
-
-    <ion-item lines="none">
-      <ion-buttons>
-        <ion-button class="icon-dimension" (click)="like(x.id_publicacion); $event.stopPropagation();">
-          <ion-icon name="thumbs-up-outline"></ion-icon>
-          <p>{{ x.like_publicacion }}</p>
-        </ion-button>
-        <ion-button class="icon-dimension" (click)="comentario(x.id_publicacion); $event.stopPropagation();">
-          <ion-icon name="chatbubble-outline"></ion-icon>
-          <p>{{ x.comentarios }}</p>
-        </ion-button>
-      </ion-buttons>
-      <ion-button fill="clear" slot="end" class="icon-dimension" (click)="guardar(x.id_publicacion); $event.stopPropagation();">
-        <ion-icon name="bookmark-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-card>
-</ion-content>
+</ion-card>

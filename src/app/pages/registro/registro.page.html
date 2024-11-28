@@ -1,112 +1,13 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
-  <div class="ion-padding">
-    <ion-card class="registro-card">
-      <ion-card-header>
-        <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-card-title class="ion-text-center">Registrarse</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-
-        <!-- Campo Nombre -->
-        <span class="texto-label">Nombre</span>
-        <div class="bordes-texto">
-          <ion-input class="input" [(ngModel)]="arregloUsuario.nombre_usuario" name="nombre"
-            placeholder="Ingrese su Nombre" required></ion-input>
-          <div *ngIf="errorNombre" class="error-message">
-            <p>{{ errorNombre }}</p>
-          </div>
-        </div>
-
-        <!-- Campo Apellido -->
-        <span class="texto-label">Apellido</span>
-        <div class="bordes-texto">
-          <ion-input class="input" [(ngModel)]="arregloUsuario.apellido_usuario" name="apellido"
-            placeholder="Ingrese su Apellido" required></ion-input>
-        </div>
-        <div *ngIf="errorApellido" class="error-message">
-          <p>{{ errorApellido }}</p>
-        </div>
-
-        <!-- Campo para seleccionar la Carrera -->
-        <span class="texto-label">Carrera</span>
-        <ion-item class="input-item">
-          <ion-select [(ngModel)]="carreraSeleccionada" label="Carrera" labelPlacement="floating"
-            placeholder="Seleccione Carrera">
-            <ion-select-option *ngFor="let carrera of carreras" [value]="carrera.id_carrera">
-              {{ carrera.nombre_carrera }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-        <div *ngIf="errorCarrera" class="error-message">
-          <p>{{ errorCarrera }}</p>
-        </div>
-
-        <!-- Campo Teléfono -->
-        <span class="texto-label">Teléfono</span>
-        <div class="bordes-texto">
-          <ion-input class="input" [(ngModel)]="arregloUsuario.telefono" name="telefono"
-            placeholder="Ingrese su Número de Teléfono" required></ion-input>
-        </div>
-        <div *ngIf="errorTelefono" class="error-message">
-          <p>{{ errorTelefono }}</p>
-        </div>
-
-        <!-- Campo Correo -->
-        <span class="texto-label">Correo</span>
-        <div class="bordes-texto">
-          <ion-input class="input" [(ngModel)]="arregloUsuario.correo_usuario" name="email"
-            placeholder="Ingrese su Correo" required></ion-input>
-        </div>
-        <div *ngIf="errorCorreo" class="error-message">
-          <p>{{ errorCorreo }}</p>
-        </div>
-
-        <!-- Campo Contraseña -->
-        <span class="texto-label">Contraseña</span>
-        <div class="bordes-texto">
-          <ion-input class="input" [(ngModel)]="arregloUsuario.contrasena" name="contrasena"
-            placeholder="Ingrese su Contraseña" type="password" required></ion-input>
-        </div>
-        <div *ngIf="errorContrasena" class="error-message">
-          <p>{{ errorContrasena }}</p>
-        </div>
-
-        <!-- Pregunta de Seguridad -->
-        <span class="texto-label">Pregunta de Seguridad</span>
-        <ion-item class="input-item">
-          <ion-select [(ngModel)]="preguntaSeleccionada" label="Preguntas" labelPlacement="floating"
-            placeholder="Seleccione Pregunta" multiple="false">
-            <ion-select-option *ngFor="let pregunta of preguntasSeguridad" [value]="pregunta.id_pregunta">
-              {{ pregunta.pregunta }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <div *ngIf="errorPregunta" class="error-message">
-          <p>{{ errorPregunta }}</p>
-        </div>
-
-        <!-- Respuesta a la Pregunta -->
-        <span class="texto-label">Respuesta</span>
-        <div class="bordes-texto">
-          <ion-input class="input" [(ngModel)]="arregloUsuario.respuesta" name="respuesta"
-            placeholder="Ingrese su Respuesta" required></ion-input>
-        </div>
-        <div *ngIf="errorRespuesta" class="error-message">
-          <p>{{ errorRespuesta }}</p>
-        </div>
-
-        <!-- Botón para registrarse -->
-        <ion-button class="custom-button" (click)="registro()">Registrarse</ion-button>
-
-        <div *ngIf="errorMessage" class="error-message">
-          <p>{{ errorMessage }}</p>
-        </div>
-
-      </ion-card-content>
-    </ion-card>
-  </div>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">registro</ion-title>
+    </ion-toolbar>
+  </ion-header>
 </ion-content>
