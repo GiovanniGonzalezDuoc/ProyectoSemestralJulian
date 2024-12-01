@@ -15,6 +15,10 @@ export class RegistroPage implements OnInit {
   correo: string = '';
   contrasena: string = '';
   Recontrasena: string = '';
+  fotoPredeterminada:string = '/assets/icon/perfil';
+  preguntas: any[] = []; // Lista de preguntas desde la base de datos
+  id_pregunta!: number; // ID de la pregunta seleccionada
+  respuesta: string = ''; // Respuesta de la pregunta
 
   constructor(
     private bd: ServicebdService,
@@ -23,12 +27,22 @@ export class RegistroPage implements OnInit {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.cargarPreguntas();
+  }
 
   // Validar correo electrónico
   validarEmail(email: string): boolean {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return re.test(String(email).toLowerCase());
+  }
+  async cargarPreguntas() {
+    try {
+      this.preguntas = await this.bd.obtenerPreguntas();
+    } catch (error) {
+      console.error('Error al cargar preguntas:', error);
+      this.presentAlert('Error', 'No se pudieron cargar las preguntas. Inténtelo más tarde.');
+    }
   }
 
   // Validar formulario y mostrar alertas si es necesario
@@ -96,8 +110,18 @@ export class RegistroPage implements OnInit {
   }
 
   insertarUsuario() {
-    const nombreUsuario = this.nombre||' '||this.apellido
-    return this.bd.insertarUsuario(nombreUsuario,1, this.correo, this.contrasena);
+    const nombreUsuario = `${this.nombre} ${this.apellido}`;
+    const fotoBlob = new Blob([this.fotoPredeterminada], { type: 'text/plain' });
+
+    return this.bd.insertarUsuario(
+      nombreUsuario,
+      this.id_rol,
+      this.correo,
+      this.contrasena,
+      fotoBlob,
+      this.id_pregunta,
+      this.respuesta
+    );
   }
 
   async presentAlert(header: string, message: string) {

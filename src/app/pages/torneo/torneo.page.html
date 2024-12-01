@@ -1,13 +1,26 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>torneo</ion-title>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Torneos</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">torneo</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-list>
+    <ion-button (click)="crearTorneo()">Crear Torneo</ion-button>
+    <ion-item *ngFor="let torneo of torneos">
+        <ion-avatar slot="start" class="trophy-image">
+          <img src="/assests/icon/copa1.jpg" alt="Copa" />
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ torneo.nombre }}</h2>
+          <p>{{ torneo.descripcion }}</p>
+        </ion-label>
+        <ion-button (click)="unirseATorneo(torneo)">Unirse</ion-button>
+        <ion-button color="danger" (click)="salirDelTorneo(torneo)">
+          <ion-icon name="close"></ion-icon> Salir
+        </ion-button>
+      </ion-item>
+  </ion-list>
 </ion-content>

@@ -49,8 +49,31 @@
                 <div class="form-input">
                     <ion-icon name="lock-closed-outline"></ion-icon>
                     <ion-item>
-                        <ion-input label="Re Ingrese La Contraseña" labelPlacement="floating" placeholder="Ingrese su contraseña otravez"
-                            [(ngModel)]="Recontrasena" name="Recontrasena" type="password" required>
+                        <ion-input label="Re Ingrese La Contraseña" labelPlacement="floating"
+                            placeholder="Ingrese su contraseña otravez" [(ngModel)]="Recontrasena" name="Recontrasena"
+                            type="password" required>
+                        </ion-input>
+                    </ion-item>
+                </div>
+                <!-- Campo para Seleccionar una Pregunta -->
+                <div class="form-input">
+                    <ion-icon name="help-outline"></ion-icon>
+                    <ion-item>
+                        <ion-label>Seleccione una pregunta</ion-label>
+                        <ion-select placeholder="Seleccione" [(ngModel)]="id_pregunta" name="pregunta" required>
+                            <ion-select-option *ngFor="let pregunta of preguntas" [value]="pregunta.id_pregunta">
+                                {{ pregunta.pregunta }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </div>
+
+                <!-- Campo para Respuesta de la Pregunta -->
+                <div class="form-input">
+                    <ion-icon name="chatbubble-outline"></ion-icon>
+                    <ion-item>
+                        <ion-input label="Respuesta" labelPlacement="floating" placeholder="Ingrese su respuesta"
+                            [(ngModel)]="respuesta" name="respuesta" required>
                         </ion-input>
                     </ion-item>
                 </div>

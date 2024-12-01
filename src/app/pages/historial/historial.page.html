@@ -1,13 +1,37 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>historial</ion-title>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Historial de Reservas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">historial</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-item>
+      <ion-label>Correo Electrónico</ion-label>
+      <ion-input [(ngModel)]="correo" name="correo" type="email" readonly required></ion-input>
+  </ion-item>
+
+  <ion-label>Consultar Historial</ion-label>
+
+  <ion-list *ngIf="historialReservas.length > 0">
+      <ion-item *ngFor="let reserva of historialReservas">
+          <ion-card>
+              <ion-card-header>
+                  <ion-card-title>Reserva en Cancha ID: {{ reserva.id_cancha }}</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                  <p>Fecha: {{ reserva.fecha_reserva | date:'fullDate' }}</p>
+                  <p>Horario: {{ reserva.horario }}</p>
+                  <p>Estado: {{ reserva.estado_reserva }}</p>
+                  <p>Correo: {{ reserva.correo }}</p>
+              </ion-card-content>
+          </ion-card>
+      </ion-item>
+  </ion-list>
+
+  <ion-item *ngIf="historialReservas.length === 0">
+      <ion-label>No se encontraron reservas para este correo.</ion-label>
+  </ion-item>
 </ion-content>

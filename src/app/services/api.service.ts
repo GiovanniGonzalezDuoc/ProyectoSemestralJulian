@@ -1,50 +1,77 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpErrorResponse,
-} from '@angular/common/http';
-import { retry, catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { retry, catchError } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
-
+  // Opciones para la cabecera HTTP
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
     }),
   };
-  // Se establece la base url del API a consumir apiURL
-  apiURL = 'https://my.api.mockaroo.com/noticias.json?key=c917b880';
-  // https://my.api.mockaroo.com/noticias.json?key=915f9190
-  // https://my.api.mockaroo.com/noticias.json?key=9bfe5340
-  // Por Si La De Arriba No Funciona
 
-  // Se declara la variable http de tipo HttpClient
+  // Base URL del API de Mockaroo
+  apiURL = 'https://my.api.mockaroo.com/nosotros.json?key=cd95e460';
+
+  // Constructor para inyectar el servicio HttpClient
   constructor(private http: HttpClient) {}
 
-  // Funcion de gets
-  getPosts(): Observable<any> {
-      return this.http.get(this.apiURL).pipe(retry(3));
+  /**
+   * Obtener todas las noticias
+   * @returns Observable con todas las noticias
+   */
+  getNoticias(): Observable<any> {
+    return this.http.get(this.apiURL).pipe(
+      retry(3) // Reintenta 3 veces en caso de error
+    );
   }
-  getPost(id: number): Observable<any> {
-    return this.http.get(`${this.apiURL}?id=${id}`).pipe(retry(3));
+
+  /**
+   * Obtener una noticia por su ID
+   * @param id ID de la noticia a buscar
+   * @returns Observable con la noticia
+   */
+  getNoticia(id: number): Observable<any> {
+    return this.http.get(`${this.apiURL}?id=${id}`).pipe(
+      retry(3) // Reintenta 3 veces en caso de error
+    );
   }
-  createPost(post: any): Observable<any> {
-    return this.http
-      .post(this.apiURL + '/posts', post, this.httpOptions)
-      .pipe(retry(3));
+
+  /**
+   * Crear una noticia
+   * @param noticia Objeto de la noticia a crear
+   * @returns Observable con la respuesta del servidor
+   */
+  createNoticia(noticia: any): Observable<any> {
+    return this.http.post(this.apiURL, noticia, this.httpOptions).pipe(
+      retry(3) // Reintenta 3 veces en caso de error
+    );
   }
-  updatePost(id: number, post: any): Observable<any> {
-    return this.http
-      .put(this.apiURL + '/posts/' + id, post, this.httpOptions)
-      .pipe(retry(3));
+
+  /**
+   * Actualizar una noticia por su ID
+   * @param id ID de la noticia a actualizar
+   * @param noticia Objeto con los datos actualizados
+   * @returns Observable con la respuesta del servidor
+   */
+  updateNoticia(id: number, noticia: any): Observable<any> {
+    return this.http.put(`${this.apiURL}/${id}`, noticia, this.httpOptions).pipe(
+      retry(3) // Reintenta 3 veces en caso de error
+    );
   }
-  deletePost(id:number): Observable<any> {
-    return this.http.delete(this.apiURL + '/posts/' + id, this.httpOptions);
+
+  /**
+   * Eliminar una noticia por su ID
+   * @param id ID de la noticia a eliminar
+   * @returns Observable con la respuesta del servidor
+   */
+  deleteNoticia(id: number): Observable<any> {
+    return this.http.delete(`${this.apiURL}/${id}`, this.httpOptions).pipe(
+      retry(3) // Reintenta 3 veces en caso de error
+    );
   }
 }

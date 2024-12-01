@@ -1,0 +1,40 @@
+ion-content {
+    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)), url("/assets/loginfutbolpadel.jpg") no-repeat center center / cover;
+}
+
+ion-card {
+    margin: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    /* Bordes redondeados */
+}
+
+ion-card-header {
+    background-color: #4CAF50;
+    /* Color de fondo verde para encabezados */
+    /* Texto blanco para contraste */
+    border-top-left-radius: 20px;
+    /* Bordes superiores redondeados */
+    border-top-right-radius: 20px;
+    /* Bordes superiores redondeados */
+}
+
+ion-card-title {
+    text-align: center;
+    font-size: 1.6rem;
+    /* Título más grande */
+    font-weight: bold;
+}
+
+ion-item {
+    padding: 12px;
+    /* Espaciado adicional para mayor confort */
+    /* Fondo blanco para elementos de la lista */
+    border-radius: 20px;
+    /* Bordes redondeados */
+}
+
+ion-button {
+    border-radius: 20px;
+    /* Bordes redondeados para el botón */
+}
