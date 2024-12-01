@@ -1,13 +1,63 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>padel</ion-title>
-  </ion-toolbar>
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Reservar Padel</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">padel</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- Selección de cancha -->
+    <ion-item>
+        <ion-label>Canchas Disponibles</ion-label>
+        <ion-select [(ngModel)]="selectedCancha" name="cancha" (ionChange)="cargarHorarios()" required>
+            <ion-select-option *ngFor="let cancha of canchasDisponibles" [value]="cancha.id_cancha">
+                {{ cancha.nombre_cancha }}
+            </ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <!-- Selección de fecha -->
+    <ion-item>
+        <ion-label>Día</ion-label>
+        <ion-select [(ngModel)]="selectedDay" placeholder="Selecciona un día">
+            <ion-select-option *ngFor="let day of days" [value]="day">{{ day }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>Mes</ion-label>
+        <ion-select [(ngModel)]="selectedMonth" placeholder="Selecciona un mes">
+            <ion-select-option *ngFor="let month of months; let i = index" [value]="i + 1">{{ month
+                }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>Año</ion-label>
+        <ion-select [(ngModel)]="selectedYear" placeholder="Selecciona un año">
+            <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+
+    <!-- Selección de horario -->
+    <ion-item>
+        <ion-label>Horarios Disponibles</ion-label>
+        <ion-select [(ngModel)]="selectedHorario" name="horario" required>
+            <ion-select-option *ngFor="let horario of horariosDisponibles" [value]="horario.id_horario">
+                {{ horario.hora_inicio }} - {{ horario.hora_fin }}
+            </ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <ion-label position="stacked">Correo</ion-label>
+        <ion-input type="email" [(ngModel)]="correo" placeholder="Ingresa tu correo" readonly required></ion-input>
+    </ion-item>
+
+    <div class="button-container">
+        <ion-button expand="full" (click)="confirmarReserva()">Reservar</ion-button>
+    </div>
 </ion-content>

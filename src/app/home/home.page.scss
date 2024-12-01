@@ -15,5 +15,19 @@ ion-card-title{
 ion-footer{
   background-color: rgba(104, 104, 104, 0.08);
 }
+ion-card {
+  margin-bottom: 16px; /* Espacio entre tarjetas */
+}
 
+.separador {
+  height: 100px; /* Altura del separador */
+}
+
+.tarjeta-padel {
+  --background: #f0f8ff; /* Fondo para PADEL */
+}
+
+.tarjeta-futbolito {
+  --background: #fffacd; /* Fondo para FUTBOLITO */
+}
 

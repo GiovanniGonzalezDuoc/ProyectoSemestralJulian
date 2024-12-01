@@ -18,20 +18,23 @@
 
     <!-- Selección de fecha -->
     <ion-item>
-      <ion-label>Fecha</ion-label>
-      <ion-select [(ngModel)]="selectedDay" name="day" (ionChange)="cargarHorarios()" required>
+      <ion-label>Día</ion-label>
+      <ion-select [(ngModel)]="selectedDay" placeholder="Selecciona un día">
         <ion-select-option *ngFor="let day of days" [value]="day">{{ day }}</ion-select-option>
       </ion-select>
     </ion-item>
+
     <ion-item>
       <ion-label>Mes</ion-label>
-      <ion-select [(ngModel)]="selectedMonth" name="month" (ionChange)="cargarHorarios()" required>
-        <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+      <ion-select [(ngModel)]="selectedMonth" placeholder="Selecciona un mes">
+        <ion-select-option *ngFor="let month of months; let i = index" [value]="i + 1">{{ month
+          }}</ion-select-option>
       </ion-select>
     </ion-item>
+
     <ion-item>
       <ion-label>Año</ion-label>
-      <ion-select [(ngModel)]="selectedYear" name="year" (ionChange)="cargarHorarios()" required>
+      <ion-select [(ngModel)]="selectedYear" placeholder="Selecciona un año">
         <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
       </ion-select>
     </ion-item>

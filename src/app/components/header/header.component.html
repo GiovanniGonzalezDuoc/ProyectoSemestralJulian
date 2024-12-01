@@ -3,19 +3,38 @@
     <ion-button class="dimension">
       <ion-menu-button></ion-menu-button>
     </ion-button>
+  </ion-buttons>
 
-    <ion-button class="dimension" (click)="mostrarTodasPublicaciones()">
-      <img src="assets/icon/logo.webp" alt="Logo Empresa" class="logo" />
+  <ion-title>Menu</ion-title>
+
+  <ion-buttons slot="start">
+    <ion-button class="dimension" [routerLink]="['/historial']">
+      <ion-icon name="list-sharp"></ion-icon>
+      Historial de reservas
+    </ion-button>
+
+    <ion-button class="dimension" [routerLink]="['/nosotros']">
+      <ion-icon name="construct-sharp"></ion-icon>
+      Nosotros
+    </ion-button>
+
+    <ion-button class="dimension" [routerLink]="['/torneo']">
+      <ion-icon name="trophy-sharp"></ion-icon>
+      Torneos
     </ion-button>
   </ion-buttons>
 
   <ion-buttons slot="end">
-    <ion-button class="dimension" [routerLink]="['/publicar']">
-      <ion-icon name="add-circle-outline"></ion-icon>
-    </ion-button>
-
     <ion-button class="dimension" [routerLink]="['/perfil']">
       <ion-icon name="person-circle-outline"></ion-icon>
+      Mi perfil
+    </ion-button>
+
+    <ion-button class="dimension" [routerLink]="['/login']">
+      <ion-icon name="log-out-sharp"></ion-icon>
+      Cerrar sesión
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+
+

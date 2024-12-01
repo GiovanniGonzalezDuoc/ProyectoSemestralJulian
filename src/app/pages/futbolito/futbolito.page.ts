@@ -15,8 +15,8 @@ export class FutbolitoPage implements OnInit {
   selectedMonth!: number;  // Mes seleccionado
   selectedYear!: number;  // Año seleccionado
   selectedHorario!: number; // ID del horario seleccionado
-  correo!: string|null;
-  id_usuario!:number;
+  correo!: string | null;
+  id_usuario!: number;
 
   // Listas de días, meses y años
   days: number[] = Array.from({ length: 31 }, (_, i) => i + 1);  // Días 1 al 31
@@ -27,14 +27,14 @@ export class FutbolitoPage implements OnInit {
   canchasDisponibles: any[] = [];
   horariosDisponibles: any[] = [];
 
-  constructor(public alertController: AlertController, private bd: ServicebdService,private router: Router,private storage:NativeStorage) { }
+  constructor(public alertController: AlertController, private bd: ServicebdService, private router: Router, private storage: NativeStorage) { }
 
   ngOnInit() {
     this.cargarCanchas();
-    this.storage.getItem('correo').then(correo=>{
+    this.storage.getItem('correo').then(correo => {
       this.correo = correo;
     })
-    this.storage.getItem('id_usuario').then(id=>{
+    this.storage.getItem('id_usuario').then(id => {
       this.id_usuario = id;
     })
   }
@@ -61,22 +61,46 @@ export class FutbolitoPage implements OnInit {
       this.horariosDisponibles = [];
     }
   }
+  // Validar si una fecha es válida
+  esFechaValida(day: number, month: number, year: number): boolean {
+    console.log('Validando fecha:', day, month, year);
+    const fecha = new Date(year, month - 1, day);
+    console.log('Fecha generada:', fecha);
   
+    const isValid =
+      fecha.getFullYear() === year &&
+      fecha.getMonth() === month - 1 &&
+      fecha.getDate() === day;
+  
+    console.log('¿Es válida?', isValid);
+    return isValid;
+  }
+
 
   async confirmarReserva() {
     if (this.selectedCancha && this.selectedDay && this.selectedMonth && this.selectedYear && this.selectedHorario && this.correo) {
+      if (!this.esFechaValida(this.selectedDay, this.selectedMonth, this.selectedYear)) {
+        console.log('Día:', this.selectedDay, 'Mes:', this.selectedMonth, 'Año:', this.selectedYear);
+        const alert = await this.alertController.create({
+          header: 'Fecha no válida',
+          message: `La fecha seleccionada (${this.selectedDay}/${this.selectedMonth}/${this.selectedYear}) no es válida.`,
+          buttons: ['OK'],
+        });
+        await alert.present();
+        return;
+      }
       // Formatear la fecha de la reserva
       const fechaReserva = `${this.selectedYear}-${this.selectedMonth < 10 ? '0' : ''}${this.selectedMonth}-${this.selectedDay < 10 ? '0' : ''}${this.selectedDay}`;
-      
+
       // Puedes asignar el estado de la reserva como 'Confirmada'
       const estadoReserva = 'Confirmada';
-  
+
       // Llamar a la función insertarReserva para guardar la reserva en la base de datos
       await this.bd.insertarReserva(this.id_usuario, this.selectedCancha, fechaReserva + ' ' + this.selectedHorario, estadoReserva, this.correo);
-  
+
       // Mostrar mensaje de confirmación
       this.bd.presentToast('bottom', `Reserva Confirmada: ${this.selectedHorario} ${fechaReserva} ${this.correo}`);
-  
+
       // Redirigir al usuario a la página de inicio o alguna otra página
       this.router.navigate(['/home']);
     } else {
@@ -89,5 +113,5 @@ export class FutbolitoPage implements OnInit {
       await alert.present();
     }
   }
-  
+
 }

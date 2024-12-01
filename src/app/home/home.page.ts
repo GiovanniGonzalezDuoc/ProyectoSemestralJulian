@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 
 @Component({
   selector: 'app-home',
@@ -6,8 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
-  constructor() {
-
+  id_rol!:number
+  constructor(private storage:NativeStorage) {
+    this.storage.getItem('id_rol').then(id=>{
+      this.id_rol = id;
+    })
   }
 }
