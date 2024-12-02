@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { AlertController } from '@ionic/angular';
 import { ServicebdService } from 'src/app/services/servicebd.service';
 
@@ -78,7 +79,14 @@ export class FutbolitoPage implements OnInit {
 
 
   async confirmarReserva() {
-    if (this.selectedCancha && this.selectedDay && this.selectedMonth && this.selectedYear && this.selectedHorario && this.correo) {
+    if (
+      this.selectedCancha &&
+      this.selectedDay &&
+      this.selectedMonth &&
+      this.selectedYear &&
+      this.selectedHorario &&
+      this.correo
+    ) {
       if (!this.esFechaValida(this.selectedDay, this.selectedMonth, this.selectedYear)) {
         console.log('Día:', this.selectedDay, 'Mes:', this.selectedMonth, 'Año:', this.selectedYear);
         const alert = await this.alertController.create({
@@ -89,20 +97,55 @@ export class FutbolitoPage implements OnInit {
         await alert.present();
         return;
       }
+  
       // Formatear la fecha de la reserva
       const fechaReserva = `${this.selectedYear}-${this.selectedMonth < 10 ? '0' : ''}${this.selectedMonth}-${this.selectedDay < 10 ? '0' : ''}${this.selectedDay}`;
-
+  
       // Puedes asignar el estado de la reserva como 'Confirmada'
       const estadoReserva = 'Confirmada';
+  
+      try {
+        // Llamar a la función insertarReserva para guardar la reserva en la base de datos
+        await this.bd.insertarReserva(
+          this.id_usuario,
+          this.selectedCancha,
+          fechaReserva + ' ' + this.selectedHorario,
+          estadoReserva,
+          this.correo
+        );
+  
+        // Mostrar mensaje de confirmación
+        this.bd.presentToast('bottom', `Reserva Confirmada: ${this.selectedHorario} ${fechaReserva} ${this.correo}`);
+        const horarioTexto = this.horariosDisponibles.find(h => h.id === this.selectedHorario)?.horario || 'Horario no disponible';
 
-      // Llamar a la función insertarReserva para guardar la reserva en la base de datos
-      await this.bd.insertarReserva(this.id_usuario, this.selectedCancha, fechaReserva + ' ' + this.selectedHorario, estadoReserva, this.correo);
-
-      // Mostrar mensaje de confirmación
-      this.bd.presentToast('bottom', `Reserva Confirmada: ${this.selectedHorario} ${fechaReserva} ${this.correo}`);
-
-      // Redirigir al usuario a la página de inicio o alguna otra página
-      this.router.navigate(['/home']);
+  
+        // Enviar notificación local
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              title: '¡Reserva Confirmada!',
+              body: `Tu reserva en la cancha ${this.selectedCancha} ha sido creada para el ${this.selectedDay}/${this.selectedMonth}/${this.selectedYear} en el horario ${horarioTexto}.`,
+              id: 1,
+              schedule: { at: new Date(Date.now() + 1000 * 5) }, // Notificación después de 5 segundos
+              sound: undefined, // Omitir este campo
+              attachments: [], // Puedes dejarlo fuera si no lo usas
+              actionTypeId: '',
+              extra: null,
+            },
+          ],
+        });
+  
+        // Redirigir al usuario a la página de inicio
+        this.router.navigate(['/home']);
+      } catch (error) {
+        console.error('Error al confirmar la reserva:', error);
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'Hubo un problema al confirmar la reserva. Inténtelo nuevamente.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+      }
     } else {
       // Mostrar mensaje de error si algún campo está vacío
       const alert = await this.alertController.create({
@@ -113,5 +156,6 @@ export class FutbolitoPage implements OnInit {
       await alert.present();
     }
   }
+  
 
 }

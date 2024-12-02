@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { AlertController } from '@ionic/angular';
 import { ServicebdService } from 'src/app/services/servicebd.service';
 
@@ -67,18 +68,25 @@ export class PadelPage implements OnInit {
     console.log('Validando fecha:', day, month, year);
     const fecha = new Date(year, month - 1, day);
     console.log('Fecha generada:', fecha);
-  
+
     const isValid =
       fecha.getFullYear() === year &&
       fecha.getMonth() === month - 1 &&
       fecha.getDate() === day;
-  
+
     console.log('¿Es válida?', isValid);
     return isValid;
   }
 
   async confirmarReserva() {
-    if (this.selectedCancha && this.selectedDay && this.selectedMonth && this.selectedYear && this.selectedHorario && this.correo) {
+    if (
+      this.selectedCancha &&
+      this.selectedDay &&
+      this.selectedMonth &&
+      this.selectedYear &&
+      this.selectedHorario &&
+      this.correo
+    ) {
       if (!this.esFechaValida(this.selectedDay, this.selectedMonth, this.selectedYear)) {
         console.log('Día:', this.selectedDay, 'Mes:', this.selectedMonth, 'Año:', this.selectedYear);
         const alert = await this.alertController.create({
@@ -93,9 +101,36 @@ export class PadelPage implements OnInit {
       const fechaReserva = `${this.selectedYear}-${this.selectedMonth < 10 ? '0' : ''}${this.selectedMonth}-${this.selectedDay < 10 ? '0' : ''}${this.selectedDay}`;
       const estadoReserva = 'Confirmada';
 
+      // Obtener el texto del horario seleccionado
+      const horarioTexto = this.horariosDisponibles.find(h => h.id === this.selectedHorario)?.horario || 'Horario no disponible';
+
       try {
-        await this.bd.insertarReserva(this.id_usuario, this.selectedCancha, fechaReserva + ' ' + this.selectedHorario, estadoReserva, this.correo);
+        await this.bd.insertarReserva(
+          this.id_usuario,
+          this.selectedCancha,
+          fechaReserva + ' ' + this.selectedHorario,
+          estadoReserva,
+          this.correo
+        );
         this.bd.presentToast('bottom', `Reserva Confirmada: ${this.selectedHorario} ${fechaReserva} ${this.correo}`);
+
+        // Enviar notificación local
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              title: '¡Reserva Confirmada!',
+              body: `Tu reserva en la cancha ${this.selectedCancha} ha sido creada para el ${this.selectedDay}/${this.selectedMonth}/${this.selectedYear} en el horario ${horarioTexto}.`,
+              id: 1,
+              schedule: { at: new Date(Date.now() + 1000 * 5) }, // Notificación después de 5 segundos
+              sound: undefined, // Omitir este campo
+              attachments: [], // O puedes dejarlo fuera si no lo usas
+              actionTypeId: '',
+              extra: null,
+            },
+          ],
+        });
+
+        // Redirigir al usuario a la página de inicio
         this.router.navigate(['/home']);
       } catch (error) {
         const alert = await this.alertController.create({
