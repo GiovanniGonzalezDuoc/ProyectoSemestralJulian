@@ -8,29 +8,35 @@
 
             <ion-buttons>
                 <ion-icon name="list-sharp"></ion-icon>
-                <ion-button [routerLink]="['/historial']">Historial de reservas</ion-button>
+                <ion-button (click)="navigateTo('/historial')">Historial de reservas</ion-button>
             </ion-buttons>
 
             <ion-buttons>
                 <ion-icon name="construct-sharp"></ion-icon>
-                <ion-button [routerLink]="['/nosotros']">Nosotros</ion-button>
+                <ion-button (click)="navigateTo('/nosotros')">Nosotros</ion-button>
             </ion-buttons>
 
             <ion-buttons>
                 <ion-icon name="trophy-sharp"></ion-icon>
-                <ion-button [routerLink]="['/torneo']">Torneos</ion-button>
+                <ion-button (click)="navigateTo('/torneo')">Torneos</ion-button>
+            </ion-buttons>
+
+            <!-- Botón de CRUD Admin visible solo para id_rol = 1 -->
+            <ion-buttons *ngIf="id_rol === 1">
+                <ion-icon name="settings-sharp"></ion-icon>
+                <ion-button (click)="navigateTo('/crud-admin')">CRUD Admin</ion-button>
             </ion-buttons>
         </ion-header>
 
         <ion-footer>
             <ion-buttons>
                 <ion-icon name="person-sharp"></ion-icon>
-                <ion-button [routerLink]="['/perfil']">Mi perfil</ion-button>
+                <ion-button (click)="navigateTo('/perfil')">Mi perfil</ion-button>
             </ion-buttons>
 
             <ion-buttons>
                 <ion-icon name="log-out-sharp"></ion-icon>
-                <ion-button [routerLink]="['/login']">Cerrar sesión</ion-button>
+                <ion-button (click)="navigateTo('/login')">Cerrar sesión</ion-button>
             </ion-buttons>
         </ion-footer>
     </ion-menu>
