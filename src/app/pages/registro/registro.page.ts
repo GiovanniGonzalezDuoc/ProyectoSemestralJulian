@@ -41,7 +41,6 @@ export class RegistroPage implements OnInit {
       this.preguntas = await this.bd.obtenerPreguntas();
     } catch (error) {
       console.error('Error al cargar preguntas:', error);
-      this.presentAlert('Error', 'No se pudieron cargar las preguntas. Inténtelo más tarde.');
     }
   }
 

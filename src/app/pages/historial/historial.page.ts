@@ -26,14 +26,8 @@ export class HistorialPage implements OnInit {
         this.correo = correo; // Asigna el correo obtenido
         if (this.correo) {
           this.consultarHistorial(); // Carga el historial si el correo es válido
-        } else {
-          this.mostrarAlertaCorreoNoDefinido();
         }
       })
-      .catch(error => {
-        console.error('Error al obtener el correo del NativeStorage:', error);
-        this.mostrarAlertaCorreoNoDefinido();
-      });
   }
 
   async consultarHistorial() {
@@ -91,12 +85,4 @@ export class HistorialPage implements OnInit {
     }
   }
 
-  async mostrarAlertaCorreoNoDefinido() {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message: 'No se pudo obtener el correo electrónico. Asegúrese de haber iniciado sesión correctamente.',
-      buttons: ['OK'],
-    });
-    await alert.present();
-  }
 }
