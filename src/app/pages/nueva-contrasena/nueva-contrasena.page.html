@@ -1,0 +1,54 @@
+<ion-content [fullscreen]="true">
+  <div class="centrar-card">
+    <div class="ion-padding">
+      <ion-card>
+        <ion-card-content>
+          <span class="texto-label">Email</span>
+          <div class="bordes-texto">
+            <!-- Campo de email en modo lectura -->
+            <ion-input
+              class="input"
+              [(ngModel)]="emailsolicitado"
+              name="email"
+              readonly
+            ></ion-input>
+          </div>
+
+          <span class="texto-label">Contraseña</span>
+          <div class="bordes-texto">
+            <ion-input
+              class="input"
+              [(ngModel)]="contrasenasolicitado"
+              name="contrasena"
+              placeholder="Ingrese su nueva contraseña"
+              type="password"
+              required
+            ></ion-input>
+          </div>
+
+          <span class="texto-label">Re Ingrese Contraseña</span>
+          <div class="bordes-texto">
+            <ion-input
+              class="input"
+              [(ngModel)]="recontrasenasolicitada"
+              name="contrasena"
+              placeholder="Confirme su nueva contraseña"
+              type="password"
+              required
+            ></ion-input>
+          </div>
+
+          <div class="container-boton">
+            <ion-button
+              class="boton-form"
+              expand="full"
+              (click)="Contrasena()"
+            >
+              Cambiar Contraseña
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

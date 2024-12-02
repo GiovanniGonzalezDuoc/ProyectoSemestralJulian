@@ -51,6 +51,10 @@ const routes: Routes = [
     path: 'torneo',
     loadChildren: () => import('./pages/torneo/torneo.module').then( m => m.TorneoPageModule)
   },
+  {
+    path: 'nueva-contrasena',
+    loadChildren: () => import('./pages/nueva-contrasena/nueva-contrasena.module').then( m => m.NuevaContrasenaPageModule)
+  },
 
 ];
 

@@ -408,6 +408,15 @@ export class ServicebdService {
         return result.rows.length > 0; // Retorna true si ya existe un usuario con ese correo
       });
   }
+  verificarRespuesta(correo_usuario: string, preguntaId: number, respuesta: string): Promise<boolean> {
+    const query = 'SELECT * FROM usuarios WHERE email = ? AND id_pregunta = ? AND respuesta = ?';
+    return this.database.executeSql(query, [correo_usuario, preguntaId, respuesta])
+      .then((res) => res.rows.length > 0)
+      .catch((e) => {
+        this.presentAlert('Error Verificando Respuesta', JSON.stringify(e));
+        return false;
+      });
+  }
   obtenerUsuario(id_usuario: number): Promise<any | null> {
     const query = 'SELECT * FROM usuarios WHERE id_usuario = ?';
     return this.database.executeSql(query, [id_usuario]).then((res) => {
@@ -423,6 +432,16 @@ export class ServicebdService {
       return null;
     });
   }
+  modificarContrasena(email: string, nuevaContrasena: string) {
+    const query = 'UPDATE usuarios SET contrasena = ? WHERE email = ?';
+    return this.database.executeSql(query, [nuevaContrasena, email])
+      .then(() => {
+        this.presentToast('bottom', 'Contraseña modificada exitosamente');
+      })
+      .catch((e) => {
+        this.presentAlert('Error Modificando Contraseña', JSON.stringify(e));
+      });
+  }  
   modificarFotoUsuario(id: number, foto: string) {
     return this.database
       .executeSql('UPDATE usuarios SET foto = ? WHERE id_usuario = ?', [foto, id])
@@ -786,6 +805,16 @@ export class ServicebdService {
     return this.database.executeSql(query, [idCancha, horaInicio, horaFin]);
   }
   //APARTADO PREGUNTAS
+  listarPreguntas(): Promise<any[]> {
+    return this.database.executeSql('SELECT * FROM preguntas', []).then((res) => {
+      const preguntas = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        preguntas.push(res.rows.item(i));
+      }
+      return preguntas;
+    });
+  }
+
   async obtenerPreguntas(): Promise<any[]> {
     const res = await this.database.executeSql('SELECT * FROM preguntas', []);
     let preguntas = [];

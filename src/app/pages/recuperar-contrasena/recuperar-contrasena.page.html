@@ -1,13 +1,34 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>recuperar-contrasena</ion-title>
+    <ion-title>Olvide mi contraseña</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">recuperar-contrasena</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Correo Electrónico</ion-label>
+    <ion-input [(ngModel)]="emailsolicitado" type="email" placeholder="Ingrese su correo"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Pregunta de Seguridad</ion-label>
+    <ion-select [(ngModel)]="preguntaSeleccionada">
+      <ion-select-option *ngFor="let pregunta of preguntasSeguridad" [value]="pregunta.id_pregunta">
+        {{ pregunta.pregunta }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <div class="error" *ngIf="errorPregunta">{{ errorPregunta }}</div>
+
+  <ion-item>
+    <ion-label position="stacked">Respuesta</ion-label>
+    <ion-input [(ngModel)]="respuesta" type="text" placeholder="Ingrese su respuesta"></ion-input>
+  </ion-item>
+  <div class="error" *ngIf="errorRespuesta">{{ errorRespuesta }}</div>
+
+  <ion-button expand="full" (click)="verificarDatos()">Verificar</ion-button>
 </ion-content>

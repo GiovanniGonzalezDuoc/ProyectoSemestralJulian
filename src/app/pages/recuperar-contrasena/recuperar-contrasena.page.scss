@@ -1,0 +1,43 @@
+ion-content {
+    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)),
+        url("/assets/loginfutbolpadel.jpg") no-repeat center center / cover;
+
+}
+
+
+  
+
+.ion-toolbar{
+
+    ion-title{
+        text-align: center;
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+
+}
+   
+}
+
+h2{
+    background-color: rgb(53, 119, 196);
+    height: 10vh;
+    font-size: 1.2rem;
+    margin-top: 0px;
+    font-weight: bolder;
+    color: white;
+    text-align: center;
+
+    margin-bottom: 0rem;
+}
+
+.login-form {
+    .form-input {
+        ion-textarea {
+            height: 5vh;
+            width: 100%;
+
+
+
+        }
+    }
+}

@@ -1,0 +1,85 @@
+/* Fondo del ion-content con una imagen */
+ion-content {
+    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)),
+        url("/assets/changepassword.jpg") no-repeat center center / cover;
+}
+
+/* Estilo de la toolbar */
+ion-toolbar {
+    ion-title {
+        text-align: center;
+        color: white;
+        font-weight: bold;
+    }
+}
+
+/* Centramos la card en el contenido */
+.centrar-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* Estilo de la tarjeta */
+ion-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    width: 90%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenido de la tarjeta */
+ion-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+/* Estilo de los labels */
+.texto-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(53, 119, 196);
+    margin-bottom: 0.5rem;
+    align-self: flex-start;
+}
+
+/* Estilo de los inputs */
+.bordes-texto {
+    width: 100%;
+    border: 2px solid rgb(53, 119, 196);
+    border-radius: 5px;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+}
+
+ion-input {
+    font-size: 1rem;
+    color: rgb(0, 0, 0);
+    width: 100%;
+}
+
+/* Botón principal */
+.boton-form {
+    width: 100%;
+    background-color: rgb(53, 119, 196);
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.boton-form:hover {
+    background-color: rgb(30, 89, 168);
+    transition: background-color 0.3s ease;
+}
+
+/* Contenedor del botón */
+.container-boton {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
