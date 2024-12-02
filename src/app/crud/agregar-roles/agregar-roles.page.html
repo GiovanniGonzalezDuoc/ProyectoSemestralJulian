@@ -1,13 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>agregar-roles</ion-title>
+    <ion-title>Agregar Rol</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">agregar-roles</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Campo de Nombre del Rol -->
+  <ion-item>
+    <ion-label position="floating">Nombre Rol</ion-label>
+    <ion-input
+      placeholder="Ingrese nombre"
+      [(ngModel)]="nombre_rol"
+    ></ion-input>
+  </ion-item>
+
+  <!-- Botones de Acción -->
+  <div class="button-group">
+    <ion-button expand="block" color="success" (click)="insertar()">Agregar Rol</ion-button>
+    <ion-button expand="block" color="warning" [routerLink]="['/crud/rol']">Ir a Lista de Roles</ion-button>
+  </div>
 </ion-content>

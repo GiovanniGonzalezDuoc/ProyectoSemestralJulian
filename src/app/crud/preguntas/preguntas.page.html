@@ -1,13 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>preguntas</ion-title>
+    <ion-title>Gestión de Preguntas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">preguntas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Lista de Preguntas -->
+  <ion-list>
+    <ion-item-sliding *ngFor="let pregunta of arregloPreguntas">
+      <ion-item>
+        <h2>{{ pregunta.texto_pregunta }}</h2>
+      </ion-item>
+
+      <!-- Opciones de Modificar/Eliminar -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="modificar(pregunta)">
+          <ion-icon slot="icon-only" name="pencil"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="eliminar(pregunta)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Botón para Agregar -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="agregar()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

@@ -1,13 +1,31 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>agregar-canchas</ion-title>
+    <ion-title>Agregar Cancha</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">agregar-canchas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Campo para el nombre de la cancha -->
+  <ion-item>
+    <ion-label position="floating">Nombre Cancha</ion-label>
+    <ion-input
+      placeholder="Ingrese el nombre de la cancha"
+      [(ngModel)]="nombre_cancha"
+    ></ion-input>
+  </ion-item>
+
+  <!-- Campo para el tipo de deporte -->
+  <ion-item>
+    <ion-label position="floating">Tipo de Deporte</ion-label>
+    <ion-input
+      placeholder="Ingrese el tipo de deporte"
+      [(ngModel)]="tipo_deporte"
+    ></ion-input>
+  </ion-item>
+
+  <!-- Botones -->
+  <div class="button-group">
+    <ion-button expand="block" color="success" (click)="insertar()">Agregar Cancha</ion-button>
+    <ion-button expand="block" color="warning" [routerLink]="['/crud/canchas']">Ir a Lista Canchas</ion-button>
+  </div>
 </ion-content>

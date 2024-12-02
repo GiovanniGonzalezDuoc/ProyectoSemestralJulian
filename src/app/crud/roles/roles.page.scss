@@ -1,0 +1,186 @@
+/* Fondo general con gradiente */
+ion-content {
+    --background: linear-gradient(135deg, #4CAF50, #81C784);
+    font-family: 'Arial', sans-serif;
+    padding: 10px;
+  }
+  
+  /* Encabezado */
+  ion-header {
+    --background: #2B6E5F;
+    --color: white;
+  }
+  
+  ion-toolbar {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  /* Títulos */
+  ion-title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+  }
+  
+  /* Botones generales */
+  ion-button {
+    --background: #4CAF50;
+    --background-activated: #45A049;
+    --color: white;
+    border-radius: 20px;
+    margin: 10px 0;
+    font-weight: bold;
+    width: 100%;
+  }
+  
+  ion-button[color="warning"] {
+    --background: #FF9800;
+    --background-activated: #E68900;
+  }
+  
+  ion-button[color="danger"] {
+    --background: #F44336;
+    --background-activated: #D32F2F;
+  }
+  
+  /* Estilo para las tarjetas (cards) */
+  ion-card {
+    margin: 10px 0;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  ion-card-header {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  
+  ion-card-title {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  
+  ion-card-content {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+  /* Inputs y campos */
+  ion-item {
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  ion-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  ion-input, ion-select, ion-datetime {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  /* Selector de opciones */
+  ion-select {
+    --placeholder-color: #999;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Listas */
+  ion-list {
+    margin: 10px 0;
+  }
+  
+  ion-item-sliding {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  ion-item-options ion-item-option {
+    font-weight: bold;
+  }
+  
+  /* FAB (Floating Action Button) */
+  ion-fab-button {
+    --background: #4CAF50;
+    --color: white;
+    border-radius: 50%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Mensajes de error */
+  .error-message {
+    color: #F44336;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-style: italic;
+  }
+  
+  /* Títulos destacados */
+  h1, h2 {
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  /* Centrado general */
+  .centrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+  }
+  
+  /* Formularios */
+  .form-input {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  ion-input::placeholder {
+    color: #999;
+    font-style: italic;
+  }
+  
+  /* Footer */
+  ion-footer {
+    --background: #2B6E5F;
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    ion-title {
+      font-size: 1.2rem;
+    }
+  
+    ion-card-title {
+      font-size: 1rem;
+    }
+  
+    ion-input, ion-label {
+      font-size: 0.9rem;
+    }
+  }
+  

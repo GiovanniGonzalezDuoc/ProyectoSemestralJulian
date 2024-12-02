@@ -1,13 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>horarios</ion-title>
+    <ion-title>Gestión de Horarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">horarios</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Lista de Horarios -->
+  <ion-list>
+    <ion-item-sliding *ngFor="let horario of arregloHorarios">
+      <ion-item>
+        <h2>{{ horario.hora_inicio }} - {{ horario.hora_fin }}</h2>
+      </ion-item>
+
+      <!-- Opciones de Modificar/Eliminar -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="modificar(horario)">
+          <ion-icon slot="icon-only" name="pencil"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="eliminar(horario)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Botón para Agregar -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="agregar()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

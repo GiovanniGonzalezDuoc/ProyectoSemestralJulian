@@ -10,6 +10,7 @@ import { Torneo } from '../models/torneo';
 import { Usuario } from '../models/usuario';
 import { Historialreserva } from '../models/historialreserva';
 import { Horario } from '../models/horario';
+import { Preguntas } from '../models/preguntas';
 
 
 
@@ -133,6 +134,7 @@ export class ServicebdService {
   listadoInscripciones = new BehaviorSubject([]);
   listadoHistorialReservas = new BehaviorSubject([]);
   listadoHorario = new BehaviorSubject([]);
+  listadoPreguntas = new BehaviorSubject([]);
 
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -741,6 +743,13 @@ export class ServicebdService {
       return null; // No se encontró inscripción
     });
   }
+  modificarInscripcion(id_inscripcion: number, id_torneo: number, id_usuario: number, fecha_inscripcion: string): Promise<void> {
+    const query = 'UPDATE inscripciones_torneo SET id_torneo = ?, id_usuario = ?, fecha_inscripcion = ? WHERE id_inscripcion = ?';
+    return this.database.executeSql(query, [id_torneo, id_usuario, fecha_inscripcion, id_inscripcion]).then(() => {
+      this.presentToast('bottom', `Inscripción modificada correctamente.`);
+      this.listarInscripciones();
+    });
+  }  
   eliminarInscripcion(id: number) {
     return this.database.executeSql('DELETE FROM inscripciones_torneo WHERE id_inscripcion = ?', [id]).then(res => {
       this.presentToast('bottom', "Inscripción Eliminada");
@@ -805,6 +814,9 @@ export class ServicebdService {
     return this.database.executeSql(query, [idCancha, horaInicio, horaFin]);
   }
   //APARTADO PREGUNTAS
+  fetchPreguntas(): Observable<Preguntas[]> {
+    return this.listadoPreguntas.asObservable();
+  }
   listarPreguntas(): Promise<any[]> {
     return this.database.executeSql('SELECT * FROM preguntas', []).then((res) => {
       const preguntas = [];
@@ -825,5 +837,26 @@ export class ServicebdService {
       });
     }
     return preguntas;
+  }
+  eliminarPreguntas(id: number) {
+    return this.database.executeSql('DELETE FROM preguntas WHERE id_pregunta = ?', [id]).then(res => {
+      this.presentToast('bottom', "Pregunta Eliminada");
+      this.listarHorarios();  // Actualiza la lista después de eliminar el horario
+    }).catch(e => {
+      this.presentAlert('Eliminar Preguntas', 'Error Eliminando Pregunta:' + JSON.stringify(e));
+    });
+  }
+  insertarPreguntas(pregunta: string): Promise<void> {
+    const query = `INSERT INTO preguntas (pregunta) VALUES (?)`;
+    return this.database.executeSql(query, [pregunta]);
+  }
+  // Método para actualizar un horario (modificar)
+  modificarPreguntas(id:number,pregunta: string) {
+    return this.database.executeSql('UPDATE preguntas SET pregunta = ? WHERE id_pregunta = ?' , [pregunta, id]).then(res => {
+      this.presentToast('bottom', 'Horario Modificado');
+      this.listarHorarios();  // Actualiza la lista después de modificar el horario
+    }).catch(e => {
+      this.presentAlert('Modificar Horario', 'Error Modificando Horario:' + JSON.stringify(e));
+    });
   }
 }

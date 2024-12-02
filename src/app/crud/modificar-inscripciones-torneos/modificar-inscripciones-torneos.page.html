@@ -1,13 +1,40 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>modificar-inscripciones-torneos</ion-title>
+    <ion-title>Modificar Inscripción</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">modificar-inscripciones-torneos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Campos para el formulario -->
+  <ion-item>
+    <ion-label position="floating">ID Usuario</ion-label>
+    <ion-input
+      type="number"
+      placeholder="Ingrese el ID del Usuario"
+      [(ngModel)]="inscripcion.id_usuario"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">ID Torneo</ion-label>
+    <ion-input
+      type="number"
+      placeholder="Ingrese el ID del Torneo"
+      [(ngModel)]="inscripcion.id_torneo"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Fecha de Inscripción</ion-label>
+    <ion-datetime
+      display-format="DD/MM/YYYY"
+      [(ngModel)]="inscripcion.fecha_inscripcion"
+    ></ion-datetime>
+  </ion-item>
+
+  <!-- Botones -->
+  <div class="button-group">
+    <ion-button expand="block" color="success" (click)="modificar()">Modificar Inscripción</ion-button>
+    <ion-button expand="block" color="warning" [routerLink]="['/crud/inscripciones-torneos']">Ir a Lista de Inscripciones</ion-button>
+  </div>
 </ion-content>

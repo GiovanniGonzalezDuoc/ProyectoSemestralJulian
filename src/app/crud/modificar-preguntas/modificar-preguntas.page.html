@@ -1,13 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>modificar-preguntas</ion-title>
+    <ion-title>Modificar Pregunta</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">modificar-preguntas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Campo para el texto de la pregunta -->
+  <ion-item>
+    <ion-label position="floating">Texto de la Pregunta</ion-label>
+    <ion-input
+      placeholder="Ingrese la pregunta"
+      [(ngModel)]="pregunta.texto_pregunta"
+    ></ion-input>
+  </ion-item>
+
+  <!-- Botones -->
+  <div class="button-group">
+    <ion-button expand="block" color="success" (click)="modificar()">Modificar Pregunta</ion-button>
+    <ion-button expand="block" color="warning" [routerLink]="['/crud/preguntas']">Ir a Lista de Preguntas</ion-button>
+  </div>
 </ion-content>

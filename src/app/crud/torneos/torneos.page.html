@@ -1,13 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>torneos</ion-title>
+    <ion-title>Gestión de Torneos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">torneos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Lista de Torneos -->
+  <ion-list>
+    <ion-item-sliding *ngFor="let torneo of arregloTorneos">
+      <ion-item>
+        <h2>{{ torneo.nombre_torneo }}</h2>
+        <p>Deporte: {{ torneo.tipo_deporte }}</p>
+        <p>Estado: {{ torneo.estado_torneo }}</p>
+      </ion-item>
+
+      <!-- Opciones de Modificar/Eliminar -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="modificar(torneo)">
+          <ion-icon slot="icon-only" name="pencil"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="eliminar(torneo)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Botón para Agregar -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="agregar()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

@@ -1,13 +1,31 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>modificar-canchas</ion-title>
+    <ion-title>Modificar Cancha</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">modificar-canchas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Campo para el nombre de la cancha -->
+  <ion-item>
+    <ion-label position="floating">Nombre Cancha</ion-label>
+    <ion-input placeholder="Ingrese el nombre de la cancha" [(ngModel)]="cancha.nombre_cancha"></ion-input>
+  </ion-item>
+
+  <!-- Campo para el tipo de deporte -->
+  <ion-item>
+    <ion-label position="floating">Tipo de Deporte</ion-label>
+    <ion-input placeholder="Ingrese el tipo de deporte" [(ngModel)]="cancha.tipo_deporte"></ion-input>
+  </ion-item>
+
+  <!-- Campo para el Estado de la cancha -->
+  <ion-item>
+    <ion-label position="floating">Estado Cancha</ion-label>
+    <ion-input placeholder="Ingrese el estado de la cancha" [(ngModel)]="cancha.estado_cancha"></ion-input>
+  </ion-item>
+
+  <!-- Botones -->
+  <div class="button-group">
+    <ion-button expand="block" color="success" (click)="modificar()">Modificar Cancha</ion-button>
+    <ion-button expand="block" color="warning" [routerLink]="['/crud/canchas']">Ir a Lista Canchas</ion-button>
+  </div>
 </ion-content>

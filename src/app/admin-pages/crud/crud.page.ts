@@ -12,20 +12,4 @@ export class CRUDPage implements OnInit {
 
   ngOnInit() {
   }
-  
-  irRol(){
-    this.router.navigate(['/crud/rol'])
-  }
-  irPublicacion(){
-
-  }
-  irControlUsuario(){
-
-  }
-  irUsuarios(){
-
-  }
-  irCategoria(){
-
-  }
 }
