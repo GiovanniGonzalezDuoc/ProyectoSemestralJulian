@@ -1,17 +1,23 @@
 ion-content {
-    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)), url("/assets/loginfutbolpadel.jpg") no-repeat center center / cover;
+    --background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1)), 
+        url("/assets/loginfutbolpadel.jpg") no-repeat center center / cover;
 }
 
+/* Estilo general de ion-card */
 ion-card {
     margin: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     /* Bordes redondeados */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Fondo blanco translúcido */
 }
 
+/* Encabezado del card */
 ion-card-header {
     background-color: #4CAF50;
     /* Color de fondo verde para encabezados */
+    color: white;
     /* Texto blanco para contraste */
     border-top-left-radius: 20px;
     /* Bordes superiores redondeados */
@@ -19,6 +25,7 @@ ion-card-header {
     /* Bordes superiores redondeados */
 }
 
+/* Título del card */
 ion-card-title {
     text-align: center;
     font-size: 1.6rem;
@@ -26,15 +33,68 @@ ion-card-title {
     font-weight: bold;
 }
 
+/* Estilo general de los items */
 ion-item {
     padding: 12px;
     /* Espaciado adicional para mayor confort */
-    /* Fondo blanco para elementos de la lista */
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Fondo blanco translúcido */
     border-radius: 20px;
     /* Bordes redondeados */
+    margin: 10px 0;
 }
 
+/* Botones generales */
 ion-button {
     border-radius: 20px;
     /* Bordes redondeados para el botón */
+}
+
+/* Centrar el label "Consultar Historial" */
+ion-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 20px 0;
+    color: white;
+}
+
+/* Estilo de los inputs */
+ion-input {
+    font-size: 1rem;
+    color: rgb(50, 50, 50);
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+/* Popover para los tres puntos */
+ion-popover {
+    --background: rgba(255, 255, 255, 0.95);
+    --box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+ion-popover ion-item {
+    color: rgb(200, 50, 50);
+    font-weight: bold;
+}
+
+ion-popover ion-item:hover {
+    background-color: rgba(255, 100, 100, 0.2);
+}
+
+/* Estilo cuando no hay reservas */
+ion-item[ng-reflect-ng-if="true"] {
+    justify-content: center;
+    text-align: center;
+    color: rgb(200, 50, 50);
+    font-weight: bold;
+    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
 }

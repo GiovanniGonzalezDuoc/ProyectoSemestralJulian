@@ -61,6 +61,36 @@ export class HistorialPage implements OnInit {
     }
   }
 
+  async mostrarOpciones(reserva: any) {
+    const alert = await this.alertController.create({
+      header: 'Opciones de Reserva',
+      message: `¿Desea cancelar esta reserva en la Cancha ID: ${reserva.id_cancha}?`,
+      buttons: [
+        {
+          text: 'Cancelar Reserva',
+          role: 'destructive',
+          handler: () => this.cancelarReserva(reserva.id_reserva),
+        },
+        {
+          text: 'Cerrar',
+          role: 'cancel',
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async cancelarReserva(id_reserva: number) {
+    try {
+      await this.bdService.eliminarReserva(id_reserva);
+      this.historialReservas = this.historialReservas.filter(reserva => reserva.id_reserva !== id_reserva);
+      this.bdService.presentToast('bottom', 'Reserva cancelada exitosamente.');
+    } catch (error) {
+      console.error('Error al cancelar la reserva:', error);
+      this.bdService.presentAlert('Error', 'No se pudo cancelar la reserva. Inténtelo nuevamente.');
+    }
+  }
+
   async mostrarAlertaCorreoNoDefinido() {
     const alert = await this.alertController.create({
       header: 'Error',
