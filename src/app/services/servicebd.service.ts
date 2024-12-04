@@ -41,7 +41,7 @@ export class ServicebdService {
     id_rol INTEGER NOT NULL, 
     email TEXT NOT NULL, 
     contrasena TEXT NOT NULL, 
-    foto BLOB NOT NULL,
+    foto BLOB,
     id_pregunta INTEGER NOT NULL,
     respuesta TEXT NOT NULL,
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol),
@@ -112,8 +112,8 @@ export class ServicebdService {
   //variables para los insert por defecto en nuestras tablas
   registroRoles: string = `INSERT OR IGNORE INTO roles (id_rol, nombre_rol) 
   VALUES (1, 'Admin'), (2, 'Usuario');`;
-  registroUsuarios: string = `INSERT OR IGNORE INTO usuarios (id_usuario, nombre, id_rol, email, contrasena) 
-  VALUES (1, 'Admin', 1, 'admin@gmail.com', 'admin'), (2, 'Usuario', 2, 'usuario@gmail.com', 'usuario');`;
+  registroUsuarios: string = `INSERT OR IGNORE INTO usuarios (id_usuario, nombre, id_rol, email, contrasena,foto,id_pregunta,respuesta) 
+  VALUES (2, 'Admin', 1, 'admin@gmail.com', 'admin','',1,'Yes')`;
   registroCanchas: string = `INSERT OR IGNORE INTO canchas (id_cancha, tipo_deporte, nombre_cancha, estado_cancha) 
   VALUES (1, 'Futbolito', 'Cancha 1', 'Disponible'), (2, 'Pádel', 'Cancha 2', 'Ocupado');`;
   registroHorarios: string = `INSERT OR IGNORE INTO horarios (id_cancha, hora_inicio, hora_fin) VALUES
@@ -187,16 +187,17 @@ export class ServicebdService {
   async crearTablas() {
     try {
       //Carga Las Listas
-      this.listarCanchas()
-      this.listarHistorialReservas()
-      this.listarHorarios()
-      this.listarInscripciones()
-      this.listarReservas()
-      this.listarRoles()
-      this.listarTorneos()
-      this.listarUsuarios()
+      this.listarCanchas();
+      this.listarHistorialReservas();
+      this.listarHorarios();
+      this.listarInscripciones();
+      this.listarReservas();
+      this.listarRoles();
+      this.listarTorneos();
+      this.listarUsuarios();
+      this.listarPregunta();
 
-      // await this.database.executeSql('DROP TABLE IF EXISTS usuarios', []);
+      //await this.database.executeSql('DROP TABLE IF EXISTS usuarios', []);
 
       //ejecuto la creación de Tablas
       await this.database.executeSql(this.tablaRoles, []);
@@ -443,7 +444,7 @@ export class ServicebdService {
       .catch((e) => {
         this.presentAlert('Error Modificando Contraseña', JSON.stringify(e));
       });
-  }  
+  }
   modificarFotoUsuario(id: number, foto: string) {
     return this.database
       .executeSql('UPDATE usuarios SET foto = ? WHERE id_usuario = ?', [foto, id])
@@ -749,7 +750,7 @@ export class ServicebdService {
       this.presentToast('bottom', `Inscripción modificada correctamente.`);
       this.listarInscripciones();
     });
-  }  
+  }
   eliminarInscripcion(id: number) {
     return this.database.executeSql('DELETE FROM inscripciones_torneo WHERE id_inscripcion = ?', [id]).then(res => {
       this.presentToast('bottom', "Inscripción Eliminada");
@@ -817,6 +818,23 @@ export class ServicebdService {
   fetchPreguntas(): Observable<Preguntas[]> {
     return this.listadoPreguntas.asObservable();
   }
+  // Método para listar los horarios de todas las canchas
+  listarPregunta() {
+    return this.database.executeSql('SELECT * FROM preguntas', []).then(res => {
+      let items: Preguntas[] = [];
+      if (res.rows.length > 0) {
+        for (let i = 0; i < res.rows.length; i++) {
+          items.push({
+            id_pregunta: res.rows.item(i).id_pregunta,
+            pregunta: res.rows.item(i).pregunta,
+          });
+        }
+      }
+      this.listadoPreguntas.next(items as any);
+    }).catch(e => {
+      console.error("Error listando preguntas:", e);
+    });
+  }
   listarPreguntas(): Promise<any[]> {
     return this.database.executeSql('SELECT * FROM preguntas', []).then((res) => {
       const preguntas = [];
@@ -851,8 +869,8 @@ export class ServicebdService {
     return this.database.executeSql(query, [pregunta]);
   }
   // Método para actualizar un horario (modificar)
-  modificarPreguntas(id:number,pregunta: string) {
-    return this.database.executeSql('UPDATE preguntas SET pregunta = ? WHERE id_pregunta = ?' , [pregunta, id]).then(res => {
+  modificarPreguntas(id: number, pregunta: string) {
+    return this.database.executeSql('UPDATE preguntas SET pregunta = ? WHERE id_pregunta = ?', [pregunta, id]).then(res => {
       this.presentToast('bottom', 'Horario Modificado');
       this.listarHorarios();  // Actualiza la lista después de modificar el horario
     }).catch(e => {

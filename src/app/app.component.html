@@ -20,12 +20,6 @@
                 <ion-icon name="trophy-sharp"></ion-icon>
                 <ion-button (click)="navigateTo('/torneo')">Torneos</ion-button>
             </ion-buttons>
-
-            <!-- Botón de CRUD Admin visible solo para id_rol = 1 -->
-            <ion-buttons *ngIf="id_rol === 1">
-                <ion-icon name="settings-sharp"></ion-icon>
-                <ion-button (click)="navigateTo('/crud-admin')">CRUD Admin</ion-button>
-            </ion-buttons>
         </ion-header>
 
         <ion-footer>

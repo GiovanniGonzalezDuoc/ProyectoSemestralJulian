@@ -13,4 +13,5 @@ export class HomePage {
       this.id_rol = id;
     })
   }
+  
 }
