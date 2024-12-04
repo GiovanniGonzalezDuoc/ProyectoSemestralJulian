@@ -25,7 +25,7 @@ export class AgregarCanchasPage {
     }
 
     try {
-      await this.bd.insertarCancha(this.nombre_cancha.trim(), this.tipo_deporte.trim(),'Activa');
+      await this.bd.insertarCancha(this.nombre_cancha.trim(), this.tipo_deporte.trim(),'Disponible');
       const alert = await this.alertController.create({
         header: 'Éxito',
         message: `La cancha "${this.nombre_cancha}" ha sido agregada correctamente.`,

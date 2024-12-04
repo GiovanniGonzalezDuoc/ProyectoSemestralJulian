@@ -115,16 +115,16 @@ export class ServicebdService {
   registroRoles: string = `INSERT OR IGNORE INTO roles (id_rol, nombre_rol) 
   VALUES (1, 'Admin'), (2, 'Usuario');`;
   registroUsuarios: string = `INSERT OR IGNORE INTO usuarios (id_usuario, nombre, id_rol, email, contrasena,foto,id_pregunta,respuesta) 
-  VALUES (2, 'Admin', 1, 'admin@gmail.com', 'admin','',1,'Yes')`;
-  registroCanchas: string = `INSERT OR IGNORE INTO canchas (id_cancha, tipo_deporte, nombre_cancha, estado_cancha) 
-  VALUES (1, 'Futbolito', 'Cancha 1', 'Disponible'), (2, 'Pádel', 'Cancha 2', 'Ocupado');`;
-  registroHorarios: string = `INSERT OR IGNORE INTO horarios (id_cancha, hora_inicio, hora_fin,estado) VALUES
+  VALUES (2, 'Admin', 1, 'admin@gmail.com', 'admin','',1,'Yes');`;
+  registroCancha: string = `INSERT OR IGNORE INTO canchas (id_cancha, tipo_deporte, nombre_cancha, estado_cancha) 
+  VALUES (1, 'Futbolito', 'Cancha 1', 'Disponible'), (2, 'Padel', 'Cancha 2', 'Disponible');`;
+  registroHorario: string = `INSERT OR IGNORE INTO horarios  (id_cancha, hora_inicio, hora_fin,estado) VALUES
   (1, '18:00', '19:00',1),
   (1, '19:00', '20:00',1),
   (2, '18:00', '19:00',1),
   (2, '19:00', '20:00',1);`;
   registroPreguntas: string = `INSERT OR IGNORE INTO preguntas (id_pregunta, pregunta) VALUES
-  (1, 'Te Gusta El Pan?')`;
+  (1, 'Te Gusta El Pan?');`;
 
 
   //variables para guardar los datos de las consultas en las tablas
@@ -201,6 +201,7 @@ export class ServicebdService {
       this.listarPreguntas();
 
       //await this.database.executeSql('DROP TABLE IF EXISTS usuarios', []);
+      //await this.database.executeSql('DROP TABLE IF EXISTS canchas', []);
       //await this.database.executeSql('DROP TABLE IF EXISTS horarios', []);
 
       //ejecuto la creación de Tablas
@@ -217,8 +218,8 @@ export class ServicebdService {
       //ejecuto los insert por defecto en el caso que existan
       await this.database.executeSql(this.registroRoles, []);
       await this.database.executeSql(this.registroUsuarios, []);
-      await this.database.executeSql(this.registroCanchas, []);
-      await this.database.executeSql(this.registroHorarios, []);
+      await this.database.executeSql(this.registroCancha, []);
+      await this.database.executeSql(this.registroHorario, []);
       await this.database.executeSql(this.registroPreguntas, []);
 
       //modifica el estado de la Base De Datos
@@ -283,6 +284,36 @@ export class ServicebdService {
       return [];
     });
   }
+  async obtenerHorariosDisponiblesFutbolito(id_cancha: number): Promise<any[]> {
+    const query = `SELECT * FROM horarios WHERE id_cancha = ? AND estado = 1`;
+    try {
+      const result = await this.database.executeSql(query, [id_cancha]);
+      const horarios = [];
+      for (let i = 0; i < result.rows.length; i++) {
+        horarios.push(result.rows.item(i));
+      }
+      return horarios;
+    } catch (error) {
+      console.error('Error al obtener los horarios disponibles:', error);
+      throw error;
+    }
+  }  
+  
+  async obtenerHorariosDisponiblesPadel(id_cancha: number): Promise<any[]> {
+    const query = `SELECT * FROM horarios WHERE id_cancha = ? AND estado = 1`;
+    try {
+      const result = await this.database.executeSql(query, [id_cancha]);
+      const horarios = [];
+      for (let i = 0; i < result.rows.length; i++) {
+        horarios.push(result.rows.item(i));
+      }
+      return horarios;
+    } catch (error) {
+      console.error('Error al obtener los horarios disponibles:', error);
+      throw error;
+    }
+  }  
+
 
   eliminarCancha(id: number) {
     return this.database.executeSql('DELETE FROM canchas WHERE id_cancha = ?', [id]).then(res => {
@@ -294,7 +325,7 @@ export class ServicebdService {
   }
 
   modificarCancha(id: number, tipo_deporte: string, nombre_cancha: string, estado_cancha: string) {
-    return this.database.executeSql('UPDATE canchas SET tipo_deporte = ?, nombre_cancha = ?, estado_cancha = ?  WHERE id_cancha = ?', [tipo_deporte, nombre_cancha, estado_cancha, id]).then(res => {
+    return this.database.executeSql('UPDATE canchas SET nombre_cancha = ?, tipo_deporte = ?, estado_cancha = ?  WHERE id_cancha = ?', [tipo_deporte, nombre_cancha, estado_cancha, id]).then(res => {
       this.presentToast('bottom', "Cancha Modificado");
       this.listarCanchas();
     }).catch(e => {
@@ -303,7 +334,7 @@ export class ServicebdService {
   }
 
   insertarCancha(tipo_deporte: string, nombre_cancha: string, estado_cancha: string) {
-    return this.database.executeSql('INSERT INTO canchas(tipo_deporte,nombre_cancha,estado_cancha) VALUES (?,?,?)', [tipo_deporte, nombre_cancha, estado_cancha]).then(res => {
+    return this.database.executeSql('INSERT INTO canchas(nombre_cancha,tipo_deporte,estado_cancha) VALUES (?,?,?)', [tipo_deporte, nombre_cancha, estado_cancha]).then(res => {
       this.presentToast('bottom', "Cancha Insertado");
       this.listarCanchas();
     }).catch(e => {
@@ -823,7 +854,7 @@ export class ServicebdService {
     });
   }
   insertarHorario(idCancha: number, horaInicio: string, horaFin: string,estado:number): Promise<void> {
-    return this.database.executeSql('INSERT INTO horarios(id_cancha, hora_inicio, hora_fin,estado) VALUES (?, ?, ?, ?)', [idCancha, horaInicio, horaFin]).then(res => {
+    return this.database.executeSql('INSERT INTO horarios(id_cancha, hora_inicio, hora_fin,estado) VALUES (?, ?, ?, ?)', [idCancha, horaInicio, horaFin,estado]).then(res => {
       this.presentToast('bottom', "Inscripción Insertada");
       this.listarHorarios();
     }).catch(e => {
