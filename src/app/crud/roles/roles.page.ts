@@ -36,7 +36,7 @@ export class RolesPage implements OnInit {
         rol: rol, // Pasar el rol seleccionado como estado
       },
     };
-    this.router.navigate(['/crud/modificar-rol'], navigationExtras);
+    this.router.navigate(['/crud/modificar-roles'], navigationExtras);
   }
 
   // Función para eliminar un rol
@@ -68,6 +68,6 @@ export class RolesPage implements OnInit {
 
   // Función para agregar un nuevo rol
   agregar() {
-    this.router.navigate(['/crud/agregar-rol']);
+    this.router.navigate(['/crud/agregar-roles']);
   }
 }

@@ -31,7 +31,7 @@ export class HorariosPage implements OnInit {
 
   // Función para modificar un horario
   modificar(horario: any) {
-    this.router.navigate(['/crud/modificar-horario'], {
+    this.router.navigate(['/crud/modificar-horarios'], {
       state: { horario },
     });
   }
@@ -65,6 +65,6 @@ export class HorariosPage implements OnInit {
 
   // Función para agregar un nuevo horario
   agregar() {
-    this.router.navigate(['/crud/agregar-horario']);
+    this.router.navigate(['/crud/agregar-horarios']);
   }
 }

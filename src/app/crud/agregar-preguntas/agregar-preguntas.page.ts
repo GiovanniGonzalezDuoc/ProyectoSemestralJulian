@@ -8,12 +8,19 @@ import { ServicebdService } from 'src/app/services/servicebd.service';
   styleUrls: ['./agregar-preguntas.page.scss'],
 })
 export class AgregarPreguntasPage {
-  texto_pregunta: string = '';
+  pregunta: string = '';
+  arregloPreguntas : any = [];
 
-  constructor(private bd: ServicebdService, private alertController: AlertController) {}
+  constructor(private bd: ServicebdService, private alertController: AlertController) {
+
+  }
+  ngOnInit() {
+
+  }
+
 
   async insertar() {
-    if (!this.texto_pregunta.trim()) {
+    if (!this.pregunta.trim()) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'El texto de la pregunta no puede estar vacío.',
@@ -24,14 +31,14 @@ export class AgregarPreguntasPage {
     }
 
     try {
-      await this.bd.insertarPreguntas(this.texto_pregunta.trim());
+      await this.bd.insertarPreguntas(this.pregunta.trim());
       const alert = await this.alertController.create({
         header: 'Éxito',
-        message: `La pregunta "${this.texto_pregunta}" ha sido agregada correctamente.`,
+        message: `La pregunta "${this.pregunta}" ha sido agregada correctamente.`,
         buttons: ['OK'],
       });
       await alert.present();
-      this.texto_pregunta = '';
+      this.pregunta = '';
     } catch (error) {
       console.error('Error al agregar la pregunta:', error);
       const alert = await this.alertController.create({

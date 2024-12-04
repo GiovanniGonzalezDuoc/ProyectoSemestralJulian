@@ -31,7 +31,7 @@ export class UsuariosPage implements OnInit {
 
   // Función para modificar un usuario
   modificar(usuario: any) {
-    this.router.navigate(['/crud/modificar-usuario'], {
+    this.router.navigate(['/crud/modificar-usuarios'], {
       state: { usuario },
     });
   }
@@ -65,6 +65,6 @@ export class UsuariosPage implements OnInit {
 
   // Función para agregar un nuevo usuario
   agregar() {
-    this.router.navigate(['/crud/agregar-usuario']);
+    this.router.navigate(['/crud/agregar-usuarios']);
   }
 }

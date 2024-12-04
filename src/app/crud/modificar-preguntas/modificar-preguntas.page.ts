@@ -31,7 +31,7 @@ export class ModificarPreguntasPage implements OnInit {
   }
 
   async modificar() {
-    if (!this.pregunta.texto_pregunta.trim()) {
+    if (!this.pregunta.pregunta.trim()) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'El texto de la pregunta no puede estar vacío.',
@@ -42,7 +42,7 @@ export class ModificarPreguntasPage implements OnInit {
     }
 
     try {
-      await this.bd.modificarPreguntas(this.pregunta.id_pregunta, this.pregunta.texto_pregunta.trim());
+      await this.bd.modificarPreguntas(this.pregunta.id_pregunta, this.pregunta.pregunta.trim());
       const alert = await this.alertController.create({
         header: 'Éxito',
         message: `La pregunta ha sido modificada correctamente.`,

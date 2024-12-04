@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ServicebdService } from 'src/app/services/servicebd.service';
 
@@ -30,10 +30,13 @@ export class CanchasPage implements OnInit {
   }
 
   // Función para modificar una cancha
-  modificar(cancha: any) {
-    this.router.navigate(['/crud/modificar-cancha'], {
-      state: { cancha },
-    });
+  modificar(x: any) {
+    let navigationsExtras: NavigationExtras ={
+      state:{
+        cancha: x
+      }
+    }
+    this.router.navigate(['/crud/modificar-canchas'],navigationsExtras);
   }
 
   // Función para eliminar una cancha
@@ -65,6 +68,6 @@ export class CanchasPage implements OnInit {
 
   // Función para agregar una nueva cancha
   agregar() {
-    this.router.navigate(['/crud/agregar-cancha']);
+    this.router.navigate(['/crud/agregar-canchas']);
   }
 }

@@ -15,13 +15,13 @@ export class PreguntasPage implements OnInit {
     private bd: ServicebdService,
     private router: Router,
     private alertController: AlertController
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Observar si la base de datos está lista
     this.bd.dbState().subscribe((data) => {
       if (data) {
-        // Observar la lista de preguntas
+        // Observar la lista de roles
         this.bd.fetchPreguntas().subscribe((res) => {
           this.arregloPreguntas = res;
         });
@@ -31,7 +31,7 @@ export class PreguntasPage implements OnInit {
 
   // Función para modificar una pregunta
   modificar(pregunta: any) {
-    this.router.navigate(['/crud/modificar-pregunta'], {
+    this.router.navigate(['/crud/modificar-preguntas'], {
       state: { pregunta },
     });
   }
@@ -40,7 +40,7 @@ export class PreguntasPage implements OnInit {
   async eliminar(pregunta: any) {
     const alert = await this.alertController.create({
       header: 'Confirmar Eliminación',
-      message: `¿Estás seguro de que deseas eliminar la pregunta "${pregunta.texto_pregunta}"?`,
+      message: `¿Estás seguro de que deseas eliminar la pregunta "${pregunta.pregunta}"?`,
       buttons: [
         {
           text: 'Cancelar',
@@ -65,6 +65,6 @@ export class PreguntasPage implements OnInit {
 
   // Función para agregar una nueva pregunta
   agregar() {
-    this.router.navigate(['/crud/agregar-pregunta']);
+    this.router.navigate(['/crud/agregar-preguntas']);
   }
 }

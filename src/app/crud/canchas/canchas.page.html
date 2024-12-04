@@ -7,18 +7,18 @@
 <ion-content [fullscreen]="true">
   <!-- Lista de Canchas -->
   <ion-list>
-    <ion-item-sliding *ngFor="let cancha of arregloCanchas">
+    <ion-item-sliding *ngFor="let x of arregloCanchas">
       <ion-item>
-        <h2>{{ cancha.nombre_cancha }}</h2>
-        <p>{{ cancha.tipo_deporte }}</p>
+        <h2>{{ x.nombre_cancha }}</h2>
+        <p>{{ x.tipo_deporte }}</p>
       </ion-item>
 
       <!-- Opciones de Modificar/Eliminar -->
       <ion-item-options side="end">
-        <ion-item-option (click)="modificar(cancha)">
+        <ion-item-option (click)="modificar(x)">
           <ion-icon slot="icon-only" name="pencil"></ion-icon>
         </ion-item-option>
-        <ion-item-option color="danger" (click)="eliminar(cancha)">
+        <ion-item-option color="danger" (click)="eliminar(x)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>

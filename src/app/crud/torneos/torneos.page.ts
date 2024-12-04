@@ -31,7 +31,7 @@ export class TorneosPage implements OnInit {
 
   // Función para modificar un torneo
   modificar(torneo: any) {
-    this.router.navigate(['/crud/modificar-torneo'], {
+    this.router.navigate(['/crud/modificar-torneos'], {
       state: { torneo },
     });
   }
@@ -65,6 +65,6 @@ export class TorneosPage implements OnInit {
 
   // Función para agregar un nuevo torneo
   agregar() {
-    this.router.navigate(['/crud/agregar-torneo']);
+    this.router.navigate(['/crud/agregar-torneos']);
   }
 }

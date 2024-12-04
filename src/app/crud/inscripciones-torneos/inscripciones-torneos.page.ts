@@ -31,7 +31,7 @@ export class InscripcionesTorneosPage implements OnInit {
 
   // Función para modificar una inscripción
   modificar(inscripcion: any) {
-    this.router.navigate(['/crud/modificar-inscripcion'], {
+    this.router.navigate(['/crud/modificar-inscripciones-torneos'], {
       state: { inscripcion },
     });
   }
@@ -65,6 +65,6 @@ export class InscripcionesTorneosPage implements OnInit {
 
   // Función para agregar una nueva inscripción
   agregar() {
-    this.router.navigate(['/crud/agregar-inscripcion']);
+    this.router.navigate(['/crud/agregar-inscripciones-torneos']);
   }
 }
