@@ -1,45 +1,65 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroPage } from './registro.page';
-import { IonicModule } from '@ionic/angular';  // Importa IonicModule para pruebas de Ionic
-import { RouterTestingModule } from '@angular/router/testing';  // Para simular la navegación
-import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';  // Para usar SQLite en las pruebas
-import { ServicebdService } from 'src/app/services/servicebd.service';  // Servicio para la base de datos
-import { HttpClientTestingModule } from '@angular/common/http/testing';  // Para simular peticiones HTTP
-import { of } from 'rxjs';  // Para simular observables
+import { IonicModule } from '@ionic/angular';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ServicebdService } from 'src/app/services/servicebd.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AlertController } from '@ionic/angular';
 
 describe('RegistroPage', () => {
   let component: RegistroPage;
   let fixture: ComponentFixture<RegistroPage>;
-  let servicebdService: ServicebdService;
+  let alertController: AlertController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [RegistroPage],
       imports: [
-        IonicModule.forRoot(),            // Para pruebas de Ionic
-        RouterTestingModule,              // Para pruebas de navegación
-        HttpClientTestingModule           // Para simular peticiones HTTP
+        IonicModule.forRoot(),
+        RouterTestingModule,
+        HttpClientTestingModule
       ],
       providers: [
-        SQLite,                           // Proveemos el servicio SQLite
         {
-          provide: ServicebdService,      // Proveemos el servicio ServicebdService
+          provide: ServicebdService,
           useValue: {
-            // Simulamos métodos del servicio
-            registrarUsuario: jasmine.createSpy().and.returnValue(of({ success: true, message: 'Registro exitoso' })),
+            registrarUsuario: jasmine.createSpy().and.returnValue(Promise.resolve({ success: true, message: 'Registro exitoso' })),
+            verificarUsuario: jasmine.createSpy().and.returnValue(Promise.resolve(false)),
+            insertarUsuario: jasmine.createSpy().and.returnValue(Promise.resolve())
           }
-        }
+        },
+        AlertController
       ]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(RegistroPage);
     component = fixture.componentInstance;
-    servicebdService = TestBed.inject(ServicebdService);  // Obtener la instancia del servicio
-    fixture.detectChanges();  // Detectar los cambios para renderizar la vista
+    alertController = TestBed.inject(AlertController);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();  // Verifica que el componente se crea correctamente
+    expect(component).toBeTruthy(); 
+  });
+
+  it('Muestra alerta si los campos están incompletos', async () => {
+    spyOn(alertController, 'create').and.returnValue(Promise.resolve({ present: () => {} } as any));
+
+    // Dejamos los campos vacíos para simular que están incompletos
+    component.nombre = '';
+    component.apellido = '';
+    component.correo = '';
+    component.contrasena = '';
+    
+    // Ejecutamos la función que valida y registra al usuario
+    await component.registrarUsuario();
+    
+    // Verificamos que la alerta fue llamada con el mensaje esperado
+    expect(alertController.create).toHaveBeenCalledWith({
+      header: 'Campos incompletos',
+      message: 'Por favor, complete todos los campos.',
+      buttons: ['OK']
+    });
   });
 });

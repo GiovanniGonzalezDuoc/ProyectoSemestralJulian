@@ -2,29 +2,31 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AgregarHorariosPage } from './agregar-horarios.page';
-import { ServicebdService } from 'src/app/services/servicebd.service'; // Importa el servicio
+import { ServicebdService } from 'src/app/services/servicebd.service';  // Importa el servicio
 import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';  // Importa SQLite
+import { AlertController } from '@ionic/angular';  // Para simular las alertas
 
 describe('AgregarHorariosPage', () => {
   let component: AgregarHorariosPage;
   let fixture: ComponentFixture<AgregarHorariosPage>;
+  let mockService: jasmine.SpyObj<ServicebdService>;
+  let mockAlertController: jasmine.SpyObj<AlertController>;
 
   beforeEach(waitForAsync(() => {
+    mockService = jasmine.createSpyObj('ServicebdService', ['obtenerCanchas', 'insertarHorario']);
+    mockAlertController = jasmine.createSpyObj('AlertController', ['create']);
+
     TestBed.configureTestingModule({
-      declarations: [AgregarHorariosPage], // Declara el componente
-      imports: [IonicModule.forRoot(), FormsModule], // Asegúrate de que estos módulos estén importados
+      declarations: [AgregarHorariosPage],
+      imports: [IonicModule.forRoot(), FormsModule],
       providers: [
+        { provide: ServicebdService, useValue: mockService },
+        { provide: AlertController, useValue: mockAlertController },
         {
-          provide: ServicebdService,  // Mock de ServicebdService
+          provide: SQLite,
           useValue: {
-            fetchHorarios: jasmine.createSpy('fetchHorarios').and.returnValue([]), // Simula la función fetchHorarios
-          },
-        },
-        {
-          provide: SQLite,  // Mock de SQLite
-          useValue: {
-            create: jasmine.createSpy('create').and.returnValue(Promise.resolve()),  // Simula la creación de la base de datos
-            executeSql: jasmine.createSpy('executeSql').and.returnValue(Promise.resolve()),  // Simula la ejecución de SQL
+            create: jasmine.createSpy('create').and.returnValue(Promise.resolve()),
+            executeSql: jasmine.createSpy('executeSql').and.returnValue(Promise.resolve()),
           },
         },
       ],
@@ -35,7 +37,22 @@ describe('AgregarHorariosPage', () => {
     fixture.detectChanges();
   }));
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('mostrar una alerta si algún campo está vacío al insertar', async () => {
+    const alertSpy = jasmine.createSpyObj('Alert', ['present']);
+    mockAlertController.create.and.returnValue(Promise.resolve(alertSpy));
+
+    component.id_cancha = 0;  // Campo vacío
+    component.hora_inicio = '';
+    component.hora_fin = '';
+    component.estado = null!;
+
+    await component.insertar();
+
+    expect(mockAlertController.create).toHaveBeenCalled();
+    expect(alertSpy.present).toHaveBeenCalled();
   });
 });

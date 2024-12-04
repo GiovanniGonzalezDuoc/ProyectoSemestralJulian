@@ -66,27 +66,5 @@ export class TorneoPage implements OnInit {
       this.bdService.presentToast('bottom','Error al salir del torneo:' + error);
     }
   }
-  async crearTorneo() {
-    const nombre_torneo = 'Torneo de Verano';
-    const descripcion = 'Un torneo emocionante para disfrutar este verano.';
-    const fecha_inicio = '2024-01-10'; // Fecha en formato ISO
-    const fecha_fin = '2024-01-15';
-    const tipo_deporte = 'Fútbol';
-    const estado_torneo = 'activo';
-  
-    try {
-      await this.bdService.insertarTorneo(
-        nombre_torneo,
-        descripcion,
-        fecha_inicio,
-        fecha_fin,
-        tipo_deporte,
-        estado_torneo
-      );
-      console.log('Torneo creado exitosamente.');
-    } catch (error) {
-      console.error('Error al crear el torneo:', error);
-    }
-  }
 }
 

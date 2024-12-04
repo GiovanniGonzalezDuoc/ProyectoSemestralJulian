@@ -1,0 +1,6 @@
+Unitarias
+Registro - Muestra alerta si los campos están incompletos
+Agregar Roles - Mostrar una alerta si el nombre del rol está vacío
+Agregar Preguntas - mostrar alerta si la pregunta está vacía
+Agregar Horarios - mostrar una alerta si algún campo está vacío al insertar
+Agregar Canchas - Mostrar una alerta si algún campo está vacío al insertar
