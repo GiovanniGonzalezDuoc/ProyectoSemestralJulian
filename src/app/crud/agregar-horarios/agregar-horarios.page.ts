@@ -8,9 +8,10 @@ import { ServicebdService } from 'src/app/services/servicebd.service';
   styleUrls: ['./agregar-horarios.page.scss'],
 })
 export class AgregarHorariosPage implements OnInit {
-  id_cancha!: number;
-  hora_inicio: string = '';
-  hora_fin: string = '';
+  id_cancha!: number; // ID de la cancha seleccionada
+  hora_inicio: string = ''; // Hora de inicio
+  hora_fin: string = ''; // Hora de fin
+  estado!: number; // Estado del horario (1: Activo, 0: Inactivo)
   canchas: any[] = []; // Lista de canchas para el selector
 
   constructor(private bd: ServicebdService, private alertController: AlertController) {}
@@ -28,8 +29,10 @@ export class AgregarHorariosPage implements OnInit {
     }
   }
 
+  // Insertar un horario en la base de datos
   async insertar() {
-    if (!this.id_cancha || !this.hora_inicio.trim() || !this.hora_fin.trim()) {
+    // Validar campos obligatorios
+    if (!this.id_cancha || !this.hora_inicio.trim() || !this.hora_fin.trim() || this.estado == null) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Todos los campos son obligatorios.',
@@ -40,16 +43,22 @@ export class AgregarHorariosPage implements OnInit {
     }
 
     try {
-      await this.bd.insertarHorario(this.id_cancha, this.hora_inicio.trim(), this.hora_fin.trim());
+      // Llamada al servicio para insertar el horario
+      await this.bd.insertarHorario(this.id_cancha, this.hora_inicio.trim(), this.hora_fin.trim(), this.estado);
+
+      // Mostrar mensaje de éxito
       const alert = await this.alertController.create({
         header: 'Éxito',
         message: `El horario "${this.hora_inicio} - ${this.hora_fin}" ha sido agregado correctamente.`,
         buttons: ['OK'],
       });
       await alert.present();
+
+      // Reiniciar los valores del formulario
       this.id_cancha = 0;
       this.hora_inicio = '';
       this.hora_fin = '';
+      this.estado = null!;
     } catch (error) {
       console.error('Error al agregar el horario:', error);
       const alert = await this.alertController.create({

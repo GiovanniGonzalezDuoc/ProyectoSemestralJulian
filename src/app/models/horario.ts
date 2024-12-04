@@ -3,4 +3,5 @@ export class Horario {
     id_cancha!:number;
     hora_inicio!:string;
     hora_fin!:string;
+    estado!:number;
 }

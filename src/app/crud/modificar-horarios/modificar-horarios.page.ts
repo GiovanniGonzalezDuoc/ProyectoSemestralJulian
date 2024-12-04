@@ -42,7 +42,7 @@ export class ModificarHorariosPage implements OnInit {
     }
 
     try {
-      await this.bd.modificarHorario(this.horario.id_horario,this.horario.id_cancha,this.horario.hora_inicio.trim(), this.horario.hora_fin.trim());
+      await this.bd.modificarHorario(this.horario.id_horario,this.horario.id_cancha,this.horario.hora_inicio.trim(), this.horario.hora_fin.trim(),this.horario.estado);
       const alert = await this.alertController.create({
         header: 'Éxito',
         message: `El horario "${this.horario.hora_inicio} - ${this.horario.hora_fin}" ha sido modificado correctamente.`,

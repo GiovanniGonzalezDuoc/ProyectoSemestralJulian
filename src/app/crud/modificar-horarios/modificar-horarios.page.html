@@ -19,6 +19,14 @@
     <ion-label position="floating">Hora de Fin</ion-label>
     <ion-input placeholder="HH:MM" [(ngModel)]="horario.hora_fin"></ion-input>
   </ion-item>
+  <!-- Selección del Estado -->
+  <ion-item>
+    <ion-label>Estado</ion-label>
+    <ion-select [(ngModel)]="horario.estado" placeholder="Selecciona el estado">
+      <ion-select-option [value]="1">Activo</ion-select-option>
+      <ion-select-option [value]="0">Inactivo</ion-select-option>
+    </ion-select>
+  </ion-item>
 
   <!-- Botones -->
   <div class="button-group">

@@ -105,8 +105,10 @@ export class ServicebdService {
     id_cancha INTEGER NOT NULL,
     hora_inicio TEXT NOT NULL,
     hora_fin TEXT NOT NULL,
+    estado NUMBER NOT NULL,
     FOREIGN KEY (id_cancha) REFERENCES canchas(id_cancha)
   );`;
+
 
 
   //variables para los insert por defecto en nuestras tablas
@@ -116,11 +118,11 @@ export class ServicebdService {
   VALUES (2, 'Admin', 1, 'admin@gmail.com', 'admin','',1,'Yes')`;
   registroCanchas: string = `INSERT OR IGNORE INTO canchas (id_cancha, tipo_deporte, nombre_cancha, estado_cancha) 
   VALUES (1, 'Futbolito', 'Cancha 1', 'Disponible'), (2, 'Pádel', 'Cancha 2', 'Ocupado');`;
-  registroHorarios: string = `INSERT OR IGNORE INTO horarios (id_cancha, hora_inicio, hora_fin) VALUES
-  (1, '18:00', '19:00'),
-  (1, '19:00', '20:00'),
-  (2, '18:00', '19:00'),
-  (2, '19:00', '20:00');`;
+  registroHorarios: string = `INSERT OR IGNORE INTO horarios (id_cancha, hora_inicio, hora_fin,estado) VALUES
+  (1, '18:00', '19:00',1),
+  (1, '19:00', '20:00',1),
+  (2, '18:00', '19:00',1),
+  (2, '19:00', '20:00',1);`;
   registroPreguntas: string = `INSERT OR IGNORE INTO preguntas (id_pregunta, pregunta) VALUES
   (1, 'Te Gusta El Pan?')`;
 
@@ -199,6 +201,7 @@ export class ServicebdService {
       this.listarPreguntas();
 
       //await this.database.executeSql('DROP TABLE IF EXISTS usuarios', []);
+      //await this.database.executeSql('DROP TABLE IF EXISTS horarios', []);
 
       //ejecuto la creación de Tablas
       await this.database.executeSql(this.tablaRoles, []);
@@ -785,6 +788,7 @@ export class ServicebdService {
             id_cancha: res.rows.item(i).id_cancha,
             hora_inicio: res.rows.item(i).hora_inicio,
             hora_fin: res.rows.item(i).hora_fin,
+            estado: res.rows.item(i).estado,
           });
         }
       }
@@ -801,18 +805,25 @@ export class ServicebdService {
       this.presentAlert('Eliminar Horario', 'Error Eliminando Horario:' + JSON.stringify(e));
     });
   }
-
-  // Método para actualizar un horario (modificar)
-  modificarHorario(id: number, idCancha: number, horaInicio: string, horaFin: string) {
-    return this.database.executeSql('UPDATE horarios SET id_cancha = ?, hora_inicio = ?, hora_fin = ? WHERE id_horario = ?', [idCancha, horaInicio, horaFin, id]).then(res => {
+  modificarEstadoHorario(id:number,estado:number){
+    return this.database.executeSql('UPDATE horarios SET estado = ? WHERE id_horario = ?', [estado, id]).then(res => {
       this.presentToast('bottom', 'Horario Modificado');
       this.listarHorarios();  // Actualiza la lista después de modificar el horario
     }).catch(e => {
       this.presentAlert('Modificar Horario', 'Error Modificando Horario:' + JSON.stringify(e));
     });
   }
-  insertarHorario(idCancha: number, horaInicio: string, horaFin: string): Promise<void> {
-    return this.database.executeSql('INSERT INTO horarios(id_cancha, hora_inicio, hora_fin) VALUES (?, ?, ?)', [idCancha, horaInicio, horaFin]).then(res => {
+  // Método para actualizar un horario (modificar)
+  modificarHorario(id: number, idCancha: number, horaInicio: string, horaFin: string,estado:number) {
+    return this.database.executeSql('UPDATE horarios SET id_cancha = ?, hora_inicio = ?, hora_fin = ?, estado = ? WHERE id_horario = ?', [idCancha, horaInicio, horaFin,estado, id]).then(res => {
+      this.presentToast('bottom', 'Horario Modificado');
+      this.listarHorarios();  // Actualiza la lista después de modificar el horario
+    }).catch(e => {
+      this.presentAlert('Modificar Horario', 'Error Modificando Horario:' + JSON.stringify(e));
+    });
+  }
+  insertarHorario(idCancha: number, horaInicio: string, horaFin: string,estado:number): Promise<void> {
+    return this.database.executeSql('INSERT INTO horarios(id_cancha, hora_inicio, hora_fin,estado) VALUES (?, ?, ?, ?)', [idCancha, horaInicio, horaFin]).then(res => {
       this.presentToast('bottom', "Inscripción Insertada");
       this.listarHorarios();
     }).catch(e => {
